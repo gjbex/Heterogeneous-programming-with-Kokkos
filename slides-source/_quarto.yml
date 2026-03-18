@@ -1,0 +1,3 @@
+project:
+  title: "Heterogeneous programming with Kokkos"
+  output-dir: "../docs/slides"

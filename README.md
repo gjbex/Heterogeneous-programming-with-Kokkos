@@ -6,6 +6,8 @@ Training material for the session 'Heterogeneous programming with Kokkos'.
 ## What is it?
 
 1. [source-code](source-code): the source code for the training material.
+1. [`slides-source`](slides-source): directory that contains the source code of
+   the quarto slides.
 1. [License](LICENSE): license information for the material in this repository.
 1. [Contributing](CONTRIBUTING.md): information on how to contribute to this
    repository.
