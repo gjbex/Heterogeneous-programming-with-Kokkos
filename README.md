@@ -1,2 +1,3 @@
-# Heterogeneous-programming-with-Kokkos
-raining material for the session 'Heterogeneous programming with Kokkos'
+# Heterogeneous programming with Kokkos
+
+Training material for the session 'Heterogeneous programming with Kokkos'.
