@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="heterogeneous_programming_with_kokkos_files/libs/clipboard/clipboard.min.js"></script>
+<script src="heterogeneous_programming_with_kokkos_files/libs/quarto-html/tabby.min.js"></script>
+<script src="heterogeneous_programming_with_kokkos_files/libs/quarto-html/popper.min.js"></script>
+<script src="heterogeneous_programming_with_kokkos_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="heterogeneous_programming_with_kokkos_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="heterogeneous_programming_with_kokkos_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="heterogeneous_programming_with_kokkos_files/libs/quarto-html/quarto-syntax-highlighting-46f66b053e56abd73bb6e954d61a315b.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.35">
+
+  <meta name="author" content="Geert Jan Bex">
+  <title>Heterogeneous programming with Kokkos</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="heterogeneous_programming_with_kokkos_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="heterogeneous_programming_with_kokkos_files/libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="heterogeneous_programming_with_kokkos_files/libs/revealjs/dist/theme/quarto-2740581606dc327e82f18f789b69d8a0.css">
+  <link href="heterogeneous_programming_with_kokkos_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="heterogeneous_programming_with_kokkos_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="heterogeneous_programming_with_kokkos_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="heterogeneous_programming_with_kokkos_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Heterogeneous programming with Kokkos</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+<a href="mailto:geertjan.bex@uhasselt.be">Geert Jan Bex</a> 
+</div>
+</div>
+</div>
+
+</section>
+<section id="motivation" class="slide level2">
+<h2>Motivation</h2>
+<p>GPUs <em>can</em> offer significant speedup</p>
+<div class="fragment">
+<p>But:</p>
+<ul>
+<li>Programming GPUs is non-trivial</li>
+<li>Not all algorithms are suitable</li>
+<li>Code may not be portable</li>
+<li>Various vendors: NVIDIA, AMD, Intel</li>
+</ul>
+</div>
+</section>
+<section id="lembarras-du-choix" class="slide level2">
+<h2>L’embarras du choix</h2>
+<ul>
+<li>CUDA (NVIDIA specific)</li>
+<li>HIP (AMD specific)</li>
+<li>OpenCL</li>
+<li>OpenMP</li>
+<li>OpenACC</li>
+<li>Kokkos</li>
+<li>SYCL</li>
+<li>Alpaka</li>
+<li>…</li>
+</ul>
+</section>
+<section id="choices-why" class="slide level2">
+<h2>Choices &amp; why</h2>
+<ul>
+<li>Kokkos</li>
+</ul>
+<div class="fragment">
+<p>Motivation</p>
+<ul>
+<li>Vendor agnostic</li>
+<li>Relatively widely used</li>
+<li>Good/reasonable documentation</li>
+<li>C++ based/Python bindings</li>
+<li>Can target non-GPU accelerators (e.g.&nbsp;FPGAs)</li>
+</ul>
+</div>
+</section>
+<section>
+<section id="kokkos" class="title-slide slide level1 center">
+<h1>Kokkos</h1>
+
+</section>
+<section id="pros" class="slide level2">
+<h2>Pros</h2>
+<ul>
+<li>Vendor agnostic</li>
+<li>Supports many backends
+<ul>
+<li>CPU: Serial, OpenMP, Pthreads, HPX</li>
+<li>GPU: CUDA, HIP, SYCL</li>
+</ul></li>
+<li>Open source</li>
+<li>Conceptually fairly straightforward</li>
+<li>Fortran/Python interoperability</li>
+</ul>
+</section>
+<section id="cons" class="slide level2">
+<h2>Cons</h2>
+<ul>
+<li>Mainly (non-trivial) C++</li>
+<li>Builds for specific targets</li>
+<li>Getting good performance can be tricky</li>
+</ul>
+</section>
+<section id="programming-paradigms" class="slide level2">
+<h2>Programming paradigms</h2>
+<ul>
+<li>Shared memory parallelism</li>
+<li>Task &amp; loop parallelism</li>
+<li>Distributed computing
+<ul>
+<li><a href="https://www.mpi-forum.org/docs/">MPI</a> (Message Passing Interface)</li>
+<li><a href="https://github.com/STEllAR-GROUP/hpx">HPX</a> (High Performance ParalleX)</li>
+<li>Legion (https://legion.stanford.edu/)</li>
+<li>PGAS (Partitioned Global Address Space) using Kokkos remote spaces</li>
+</ul></li>
+</ul>
+<aside class="notes">
+<p>PGAS can use OpenSHMEM, NVIDIA NVSHMEM, MPI 1-sided communcation.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="main-concepts" class="slide level2">
+<h2>Main concepts</h2>
+<ul>
+<li>Memory spaces: place your data</li>
+<li>Execution spaces: execute your code</li>
+<li>Execution pattern: parallel constructs</li>
+</ul>
+</section>
+<section id="installation-building" class="slide level2">
+<h2>Installation &amp; building</h2>
+<ul>
+<li>Easy with CMake</li>
+<li>Through Spack</li>
+</ul>
+<div class="fragment">
+<p>Building with CMake:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource cmake number-lines code-with-copy"><code class="sourceCode cmake"><span id="cb1-1"><a href=""></a><span class="kw">find_package</span>(Kokkos <span class="ot">REQUIRED</span>)</span>
+<span id="cb1-2"><a href=""></a>...</span>
+<span id="cb1-3"><a href=""></a><span class="kw">target_link_libraries</span>(<span class="bn">my_target</span> <span class="bn">Kokkos::kokkos</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="hello-world" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Hello world</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource cpp number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode cpp hljs"><span id="cb2-1" class="hljs-ln-code"><a href=""></a><span class="co">// include Kokkos header files</span></span>
+<span id="cb2-2" class="hljs-ln-code"><a href=""></a></span>
+<span id="cb2-3" class="hljs-ln-code"><a href=""></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span><span class="op">*</span> argv<span class="op">[])</span> <span class="op">{</span></span>
+<span id="cb2-4" class="hljs-ln-code"><a href=""></a>    <span class="co">// initialize Kokkos</span></span>
+<span id="cb2-5" class="hljs-ln-code"><a href=""></a></span>
+<span id="cb2-6" class="hljs-ln-code"><a href=""></a>    <span class="co">// print in parallel</span></span>
+<span id="cb2-7" class="hljs-ln-code"><a href=""></a></span>
+<span id="cb2-8" class="hljs-ln-code"><a href=""></a>    <span class="co">// finalize Kokkos</span></span>
+<span id="cb2-9" class="hljs-ln-code"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb2-10" class="hljs-ln-code"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="headers" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Headers</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource cpp number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode cpp hljs"><span id="cb3-1" class="hljs-ln-code"><a href=""></a><span class="pp">#include </span><span class="im">&lt;Kokkos_Core.hpp&gt;</span></span>
+<span id="cb3-2" class="hljs-ln-code"><a href=""></a></span>
+<span id="cb3-3" class="hljs-ln-code"><a href=""></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span><span class="op">*</span> argv<span class="op">[])</span> <span class="op">{</span></span>
+<span id="cb3-4" class="hljs-ln-code"><a href=""></a>    <span class="co">// initialize Kokkos</span></span>
+<span id="cb3-5" class="hljs-ln-code"><a href=""></a></span>
+<span id="cb3-6" class="hljs-ln-code"><a href=""></a>    <span class="co">// print in parallel</span></span>
+<span id="cb3-7" class="hljs-ln-code"><a href=""></a></span>
+<span id="cb3-8" class="hljs-ln-code"><a href=""></a>    <span class="co">// finalize Kokkos</span></span>
+<span id="cb3-9" class="hljs-ln-code"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb3-10" class="hljs-ln-code"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="initializefinalize" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Initialize/finalize</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-3"><pre class="sourceCode numberSource cpp code-annotation-code number-lines code-with-copy code-annotated" data-id="quarto-animate-code"><code class="sourceCode cpp hljs"><span id="annotated-cell-3-1" class="hljs-ln-code"><a href="#annotated-cell-3-1"></a><span class="pp">#include </span><span class="im">&lt;Kokkos_Core.hpp&gt;</span></span>
+<span id="annotated-cell-3-2" class="hljs-ln-code"><a href="#annotated-cell-3-2"></a></span>
+<span id="annotated-cell-3-3" class="hljs-ln-code"><a href="#annotated-cell-3-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span><span class="op">*</span> argv<span class="op">[])</span> <span class="op">{</span></span>
+<button class="code-annotation-anchor hljs-ln-code" data-target-cell="annotated-cell-3" data-target-annotation="1">1</button><span id="annotated-cell-3-4" class="code-annotation-target hljs-ln-code"><a href="#annotated-cell-3-4"></a>    Kokkos<span class="op">::</span>initialize<span class="op">(</span>argc<span class="op">,</span> argv<span class="op">);</span></span>
+<span id="annotated-cell-3-5" class="hljs-ln-code"><a href="#annotated-cell-3-5"></a></span>
+<span id="annotated-cell-3-6" class="hljs-ln-code"><a href="#annotated-cell-3-6"></a>    <span class="co">// print in parallel</span></span>
+<span id="annotated-cell-3-7" class="hljs-ln-code"><a href="#annotated-cell-3-7"></a></span>
+<button class="code-annotation-anchor hljs-ln-code" data-target-cell="annotated-cell-3" data-target-annotation="2">2</button><span id="annotated-cell-3-8" class="code-annotation-target hljs-ln-code"><a href="#annotated-cell-3-8"></a>    Kokkos<span class="op">::</span>finalize<span class="op">();</span></span>
+<span id="annotated-cell-3-9" class="hljs-ln-code"><a href="#annotated-cell-3-9"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="annotated-cell-3-10" class="hljs-ln-code"><a href="#annotated-cell-3-10"></a><span class="op">}</span></span><div class="code-annotation-gutter-bg hljs-ln-code"></div><div class="code-annotation-gutter hljs-ln-code"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-3" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-3" data-code-lines="4" data-code-annotation="1">No Kokkos can be used before <code>Kokkos::initialize(...)</code></span>
+</dd>
+<dt data-target-cell="annotated-cell-3" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-3" data-code-lines="8" data-code-annotation="2">No Kokkos can be used after <code>Kokkos::finalize()</code></span>
+</dd>
+</dl>
+</section>
+<section id="parallel-for" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Parallel for</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-4"><pre class="sourceCode numberSource cpp code-annotation-code number-lines code-with-copy code-annotated" data-id="quarto-animate-code"><code class="sourceCode cpp hljs"><span id="annotated-cell-4-1" class="hljs-ln-code"><a href="#annotated-cell-4-1"></a><span class="pp">#include </span><span class="im">&lt;Kokkos_Core.hpp&gt;</span></span>
+<span id="annotated-cell-4-2" class="hljs-ln-code"><a href="#annotated-cell-4-2"></a></span>
+<span id="annotated-cell-4-3" class="hljs-ln-code"><a href="#annotated-cell-4-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span><span class="op">*</span> argv<span class="op">[])</span> <span class="op">{</span></span>
+<span id="annotated-cell-4-4" class="hljs-ln-code"><a href="#annotated-cell-4-4"></a>    Kokkos<span class="op">::</span>initialize<span class="op">(</span>argc<span class="op">,</span> argv<span class="op">);</span></span>
+<button class="code-annotation-anchor hljs-ln-code" data-target-cell="annotated-cell-4" data-target-annotation="1">1</button><span id="annotated-cell-4-5" class="code-annotation-target hljs-ln-code"><a href="#annotated-cell-4-5"></a><span class="dv">3</span>   Kokkos<span class="op">::</span>parallel_for<span class="op">(</span><span class="dv">15</span><span class="op">,</span> KOKKOS_LAMBA<span class="op">(</span><span class="at">const</span> <span class="dt">int</span> i<span class="op">)</span> <span class="op">{</span></span>
+<button class="code-annotation-anchor hljs-ln-code" data-target-cell="annotated-cell-4" data-target-annotation="2">2</button><span id="annotated-cell-4-6" class="code-annotation-target hljs-ln-code"><a href="#annotated-cell-4-6"></a>        Kokkos<span class="op">::</span>printf<span class="op">(</span><span class="st">"hello from i = </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span> i<span class="op">);</span></span>
+<span id="annotated-cell-4-7" class="hljs-ln-code"><a href="#annotated-cell-4-7"></a>    <span class="op">}</span></span>
+<span id="annotated-cell-4-8" class="hljs-ln-code"><a href="#annotated-cell-4-8"></a>    Kokkos<span class="op">::</span>finalize<span class="op">();</span></span>
+<span id="annotated-cell-4-9" class="hljs-ln-code"><a href="#annotated-cell-4-9"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="annotated-cell-4-10" class="hljs-ln-code"><a href="#annotated-cell-4-10"></a><span class="op">}</span></span><div class="code-annotation-gutter-bg hljs-ln-code"></div><div class="code-annotation-gutter hljs-ln-code"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-4" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-4" data-code-lines="5" data-code-annotation="1"><code>15</code>: number of iterations, lambda function to execute</span>
+</dd>
+<dt data-target-cell="annotated-cell-4" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-4" data-code-lines="6" data-code-annotation="2"><code>i</code>: iteration-number from <code>0</code> to <code>14</code></span>
+</dd>
+</dl>
+</section>
+<section id="kokkos-views" class="slide level2">
+<h2>Kokkos views</h2>
+<p>View = <span class="math inline">\(N\)</span>-dimentional arrays</p>
+<ul>
+<li>contains
+<ul>
+<li>basic types (<code>int</code>, <code>float</code>, <code>double</code>,…)</li>
+<li><code>struct</code> of basic types</li>
+</ul></li>
+<li>in memory space of host or device</li>
+<li>memory layout can be controled, sane defaults</li>
+<li>managed by reference counting</li>
+</ul>
+</section>
+<section id="views-examples" class="slide level2">
+<h2>Views examples</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-5"><pre class="sourceCode numberSource cpp code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode cpp"><button class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="1">1</button><span id="annotated-cell-5-1" class="code-annotation-target"><a href="#annotated-cell-5-1"></a>Kokkos<span class="op">::</span>View<span class="op">&lt;</span><span class="dt">double</span><span class="op">*&gt;</span> a<span class="op">(</span><span class="st">"a"</span><span class="op">,</span> <span class="dv">10</span><span class="op">);</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="2">2</button><span id="annotated-cell-5-2" class="code-annotation-target"><a href="#annotated-cell-5-2"></a>Kokkos<span class="op">::</span>View<span class="op">&lt;</span><span class="dt">double</span><span class="op">[</span><span class="dv">5</span><span class="op">]&gt;</span> b<span class="op">(</span><span class="st">"b"</span><span class="op">);</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="3">3</button><span id="annotated-cell-5-3" class="code-annotation-target"><a href="#annotated-cell-5-3"></a>Kokkos<span class="op">::</span>View<span class="op">&lt;</span>doucle<span class="op">**&gt;</span> c<span class="op">(</span><span class="st">"c"</span><span class="op">,</span> <span class="dv">10</span><span class="op">,</span> <span class="dv">15</span><span class="op">);</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="4">4</button><span id="annotated-cell-5-4" class="code-annotation-target"><a href="#annotated-cell-5-4"></a>Kokkos<span class="op">::</span>View<span class="op">&lt;</span><span class="dt">double</span><span class="op">*[</span><span class="dv">20</span><span class="op">]&gt;</span> d<span class="op">(</span><span class="st">"d"</span><span class="op">,</span> <span class="dv">10</span><span class="op">);</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="5">5</button><span id="annotated-cell-5-5" class="code-annotation-target"><a href="#annotated-cell-5-5"></a>Kokkos<span class="op">::</span>View<span class="op">&lt;</span><span class="dt">double</span><span class="op">[</span><span class="dv">7</span><span class="op">][</span><span class="dv">9</span><span class="op">]&gt;</span> e<span class="op">(</span><span class="st">"e"</span><span class="op">);</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="6">6</button><span id="annotated-cell-5-6" class="code-annotation-target"><a href="#annotated-cell-5-6"></a>Kokkos<span class="op">::</span>View<span class="op">&lt;</span><span class="dt">double</span><span class="op">***&gt;</span> f<span class="op">(</span><span class="st">"f"</span><span class="op">,</span> <span class="dv">10</span><span class="op">,</span> <span class="dv">10</span><span class="op">,</span> <span class="dv">10</span><span class="op">);</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="7">7</button><span id="annotated-cell-5-7" class="code-annotation-target"><a href="#annotated-cell-5-7"></a>Kokkos<span class="op">::</span>View<span class="op">&lt;</span><span class="dt">double</span><span class="op">*[</span><span class="dv">13</span><span class="op">][</span><span class="dv">17</span><span class="op">]&gt;</span> f<span class="op">(</span><span class="st">"f"</span><span class="op">,</span> <span class="dv">10</span><span class="op">);</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-5" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-5" data-code-lines="1" data-code-annotation="1">1D array of 10 elements, runtime</span>
+</dd>
+<dt data-target-cell="annotated-cell-5" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-5" data-code-lines="2" data-code-annotation="2">1D array of 5 elements, compile time</span>
+</dd>
+<dt data-target-cell="annotated-cell-5" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-5" data-code-lines="3" data-code-annotation="3">2D array of 10x15 elements, runtime</span>
+</dd>
+<dt data-target-cell="annotated-cell-5" data-target-annotation="4">4</dt>
+<dd>
+<span data-code-cell="annotated-cell-5" data-code-lines="4" data-code-annotation="4">2D array of 10x20 elements, rows runtime</span>
+</dd>
+<dt data-target-cell="annotated-cell-5" data-target-annotation="5">5</dt>
+<dd>
+<span data-code-cell="annotated-cell-5" data-code-lines="5" data-code-annotation="5">2D array of 7x9 elements, compile time</span>
+</dd>
+<dt data-target-cell="annotated-cell-5" data-target-annotation="6">6</dt>
+<dd>
+<span data-code-cell="annotated-cell-5" data-code-lines="6" data-code-annotation="6">3D array of 10x10x10 elements, runtime</span>
+</dd>
+<dt data-target-cell="annotated-cell-5" data-target-annotation="7">7</dt>
+<dd>
+<span data-code-cell="annotated-cell-5" data-code-lines="7" data-code-annotation="7">3D array of 10x13x17 elements, first dimension runtime</span>
+</dd>
+</dl>
+</section>
+<section id="accessing-views" class="slide level2">
+<h2>Accessing views</h2>
+<p>Views can be accessed using <code>operator()</code> with indices</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb4-1"><a href=""></a>a<span class="op">(</span><span class="dv">0</span><span class="op">)</span> <span class="op">=</span> <span class="fl">1.0</span><span class="op">;</span></span>
+<span id="cb4-2"><a href=""></a><span class="kw">auto</span> x <span class="op">{</span>a<span class="op">(</span><span class="dv">1</span><span class="op">)</span> <span class="op">+</span> b<span class="op">(</span><span class="dv">2</span><span class="op">)};</span></span>
+<span id="cb4-3"><a href=""></a>c<span class="op">(</span><span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">)</span> <span class="op">=</span> <span class="fl">3.0</span><span class="op">;</span></span>
+<span id="cb4-4"><a href=""></a>f<span class="op">(</span><span class="dv">8</span><span class="op">,</span> <span class="dv">9</span><span class="op">,</span> <span class="dv">10</span><span class="op">)</span> <span class="op">=</span> <span class="fl">6.0</span><span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="views-and-memory-spaces" class="slide level2">
+<h2>Views and memory spaces</h2>
+<ul>
+<li>By default in the default execution space</li>
+<li>Can be placed in host or device memory space
+<ul>
+<li><code>Kokkos::HostSpace</code> on host</li>
+<li><code>Kokkos::CudaSpace</code> on CUDA device</li>
+<li><code>Kokkos::CudaUVMSpace</code> in [CUDA UVM]^(Unified Virtual Memory)</li>
+<li><code>Kokkos::HipSpace</code> on HIP device</li>
+</ul></li>
+</ul>
+<div class="fragment">
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Warning</strong></p>
+</div>
+<div class="callout-content">
+<p>Can only be accessed in execution space associated with memory space</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="memory-layout" class="slide level2">
+<h2>Memory layout</h2>
+<p>Two main memory layouts</p>
+<ul>
+<li><code>Kokkos::LayoutLeft</code> = column-major</li>
+<li><code>Kokkos::LayoutRight</code> = row-major</li>
+</ul>
+<div class="fragment">
+<p>Example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb5-1"><a href=""></a>Kokkos<span class="op">::</span>View<span class="op">&lt;</span><span class="dt">double</span><span class="op">**,</span> Kokkos<span class="op">::</span>LayoutLeft<span class="op">&gt;</span> a<span class="op">(</span><span class="st">"a"</span><span class="op">,</span> <span class="dv">10</span><span class="op">,</span> <span class="dv">15</span><span class="op">);</span></span>
+<span id="cb5-2"><a href=""></a>Kokkos<span class="op">::</span>View<span class="op">&lt;</span><span class="dt">double</span><span class="op">**,</span> Kokkos<span class="op">::</span>LayoutRight<span class="op">&gt;</span> b<span class="op">(</span><span class="st">"b"</span><span class="op">,</span> <span class="dv">10</span><span class="op">,</span> <span class="dv">15</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="fragment">
+<p>Default “best” for memory space, parallel access over leftmost index</p>
+<ul>
+<li>Left for device memory spaces: coalesced memory access</li>
+<li>Right for host memory space: cache-friendly access</li>
+</ul>
+</div>
+</section>
+<section id="deep-copy" class="slide level2">
+<h2>Deep copy</h2>
+<ul>
+<li>Copy data between views</li>
+<li>Bit copy, no conversion
+<ul>
+<li>views must have the same layout and padding</li>
+</ul></li>
+<li>Execution space can be specified</li>
+</ul>
+<div class="fragment">
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Warning</strong></p>
+</div>
+<div class="callout-content">
+<p><code>Kokkos::deep_copy</code> between different memory spaces may not work</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="mirror-views" class="slide level2">
+<h2>Mirror views</h2>
+<p>Required for, e.g.,</p>
+<ul>
+<li>initlizing views from file</li>
+<li>writing views to file</li>
+<li>non-paralellizable operations</li>
+</ul>
+<div class="fragment">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-22"><pre class="sourceCode numberSource cpp code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode cpp"><span id="annotated-cell-22-1"><a href="#annotated-cell-22-1"></a>Kokkos<span class="op">::</span>View<span class="op">&lt;</span><span class="dt">double</span><span class="op">*&gt;</span> a<span class="op">(</span><span class="st">"a"</span><span class="op">,</span> <span class="dv">10</span><span class="op">);</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-22" data-target-annotation="1">1</button><span id="annotated-cell-22-2" class="code-annotation-target"><a href="#annotated-cell-22-2"></a><span class="kw">auto</span> a_host <span class="op">=</span> Kokkos<span class="op">::</span>create_mirror<span class="op">(</span>a<span class="op">);</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-22" data-target-annotation="2">2</button><span id="annotated-cell-22-3" class="code-annotation-target"><a href="#annotated-cell-22-3"></a>Kokkos<span class="op">::</span>deep_copy<span class="op">(</span>a_host<span class="op">,</span> a<span class="op">);</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-22" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-22" data-code-lines="2" data-code-annotation="1">Create a mirror view on host</span>
+</dd>
+<dt data-target-cell="annotated-cell-22" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-22" data-code-lines="3" data-code-annotation="2">Copy data from device to host</span>
+</dd>
+</dl>
+</div>
+<div class="fragment">
+<p>Takes care of layout differences</p>
+</div>
+</section>
+<section id="memory-traits" class="slide level2">
+<h2>Memory traits</h2>
+<ul>
+<li><code>Kokkos::RandomAccess</code> = random access to view’s elements
+<ul>
+<li>if view is <code>const</code> and <code>CudaSpace</code>, use texture memory/fetch</li>
+<li>no other memory spaces take advantage</li>
+</ul></li>
+<li><code>Kokkos::Atomic</code> = all operations on view’s elements are atomic</li>
+<li>Combine traits: use<code>|</code></li>
+</ul>
+</section>
+<section id="using-memory-traits" class="slide level2">
+<h2>Using memory traits</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-7"><pre class="sourceCode numberSource cpp code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode cpp"><button class="code-annotation-anchor" data-target-cell="annotated-cell-7" data-target-annotation="1">1</button><span id="annotated-cell-7-1" class="code-annotation-target"><a href="#annotated-cell-7-1"></a>Kokkos<span class="op">::</span>View<span class="op">&lt;</span><span class="dt">int</span><span class="op">*&gt;</span> a<span class="op">(</span><span class="st">"a"</span> <span class="op">,</span> <span class="dv">100</span><span class="op">);</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-7" data-target-annotation="2">2</button><span id="annotated-cell-7-2" class="code-annotation-target"><a href="#annotated-cell-7-2"></a>Kokkos<span class="op">::</span>View<span class="op">&lt;</span><span class="dt">int</span><span class="op">*,</span> Kokkos<span class="op">::</span>MemoryTraits<span class="op">&lt;</span>Kokkos<span class="op">::</span>Atomic<span class="op">&gt;</span> <span class="op">&gt;</span> a_atomic <span class="op">=</span> a<span class="op">;</span></span>
+<span id="annotated-cell-7-3"><a href="#annotated-cell-7-3"></a>    </span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-7" data-target-annotation="3">3</button><span id="annotated-cell-7-4" class="code-annotation-target"><a href="#annotated-cell-7-4"></a>a_atomic<span class="op">(</span><span class="dv">1</span><span class="op">)++;</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-7" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-7" data-code-lines="1" data-code-annotation="1">Create ordinary view</span>
+</dd>
+<dt data-target-cell="annotated-cell-7" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-7" data-code-lines="2" data-code-annotation="2">Create atomic view from ordinary view</span>
+</dd>
+<dt data-target-cell="annotated-cell-7" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-7" data-code-lines="4" data-code-annotation="3">All operations on <code>a_atomic</code> are atomic</span>
+</dd>
+</dl>
+<aside class="notes">
+<p>Texture memroy has shorter cache lines, better for random access.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="unmanaged-views" class="slide level2">
+<h2>Unmanaged views</h2>
+<ul>
+<li>Useful for interfacing with external libraries</li>
+<li>Views that do not manage memory</li>
+<li>Can be created from raw pointers</li>
+<li>No reference counting</li>
+</ul>
+</section>
+<section id="subviews" class="slide level2">
+<h2>Subviews</h2>
+<ul>
+<li>Similar to Fortran, MATLAB, Python slicing</li>
+<li>Kokkos has no strided slices</li>
+<li>Subviews are views</li>
+<li>Same reference count as original view</li>
+</ul>
+<div class="fragment">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-23"><pre class="sourceCode numberSource cpp code-annotation-code number-lines code-with-copy"><code class="sourceCode cpp"><span id="annotated-cell-23-1"><a href="#annotated-cell-23-1"></a>Kokkos<span class="op">::</span>View<span class="op">&lt;</span><span class="dt">double</span><span class="op">**&gt;</span> a<span class="op">(</span><span class="st">"a"</span><span class="op">,</span> <span class="dv">10</span><span class="op">,</span> <span class="dv">15</span><span class="op">);</span></span>
+<span id="annotated-cell-23-2"><a href="#annotated-cell-23-2"></a><span class="kw">auto</span> b <span class="op">=</span> Kokkos<span class="op">::</span>subview<span class="op">(</span>a<span class="op">,</span> Kokkos<span class="op">::</span>ALL<span class="op">,</span> <span class="bu">std::</span>make_pair<span class="op">(</span><span class="dv">2</span><span class="op">,</span> <span class="dv">5</span><span class="op">));</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="execution-patterns" class="slide level2">
+<h2>Execution patterns</h2>
+<div class="fragment">
+<p>Parallel for:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb6-1"><a href=""></a>Kokkos<span class="op">::</span>parallel_for<span class="op">(</span><span class="dv">10</span><span class="op">,</span> KOKKOS_LAMBDA<span class="op">(</span><span class="dt">int</span> i<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-2"><a href=""></a>        a<span class="op">(</span>i<span class="op">)</span> <span class="op">=</span> i<span class="op">;</span></span>
+<span id="cb6-3"><a href=""></a>    <span class="op">});</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="fragment">
+<p>Parallel reduce:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb7-1"><a href=""></a><span class="dt">double</span> sum <span class="op">{</span><span class="fl">0.0</span><span class="op">};</span></span>
+<span id="cb7-2"><a href=""></a>Kokkos<span class="op">::</span>parallel_reduce<span class="op">(</span><span class="dv">10</span><span class="op">,</span> KOKKOS_LAMBDA<span class="op">(</span><span class="dt">int</span> i<span class="op">,</span> <span class="dt">double</span><span class="op">&amp;</span> sum<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb7-3"><a href=""></a>        sum <span class="op">+=</span> a<span class="op">(</span>i<span class="op">);</span></span>
+<span id="cb7-4"><a href=""></a>    <span class="op">},</span> sum<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="fragment">
+<p>Parallel scan:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb8-1"><a href=""></a>Kokkos<span class="op">::</span>parallel_scan<span class="op">(</span><span class="dv">10</span><span class="op">,</span> KOKKOS_LAMBDA<span class="op">(</span><span class="dt">int</span> i<span class="op">,</span> <span class="dt">double</span><span class="op">&amp;</span> update<span class="op">,</span> <span class="dt">bool</span> <span class="kw">final</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb8-2"><a href=""></a>        update <span class="op">+=</span> a<span class="op">(</span>i<span class="op">);</span></span>
+<span id="cb8-3"><a href=""></a>        <span class="cf">if</span> <span class="op">(</span><span class="kw">final</span><span class="op">)</span> a<span class="op">(</span>i<span class="op">)</span> <span class="op">=</span> update<span class="op">;</span></span>
+<span id="cb8-4"><a href=""></a>    <span class="op">});</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="execution-policies" class="slide level2">
+<h2>Execution policies</h2>
+<div class="fragment">
+<p><code>Kokkos::RangePolicy</code> = range of indices</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb9-1"><a href=""></a>Kokkos<span class="op">::</span>parallel_for<span class="op">(</span>Kokkos<span class="op">::</span>RangePolicy<span class="op">(</span><span class="dv">0</span><span class="op">,</span> <span class="dv">10</span><span class="op">),</span></span>
+<span id="cb9-2"><a href=""></a>    KOKKOS_LAMBDA<span class="op">(</span><span class="dt">int</span> i<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-3"><a href=""></a>        a<span class="op">(</span>i<span class="op">)</span> <span class="op">=</span> i<span class="op">;</span></span>
+<span id="cb9-4"><a href=""></a>    <span class="op">});</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="fragment">
+<p><code>Kokkos::MDRangePolicy</code> = multi-dimensional range</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb10-1"><a href=""></a>Kokkos<span class="op">::</span>parallel_for<span class="op">(</span></span>
+<span id="cb10-2"><a href=""></a>    Kokkos<span class="op">::</span>MDRangePolicy<span class="op">&lt;</span>Kokkos<span class="op">::</span>Rank<span class="op">&lt;</span><span class="dv">2</span><span class="op">&gt;&gt;({</span><span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">},</span> <span class="op">{</span><span class="dv">10</span><span class="op">,</span> <span class="dv">15</span><span class="op">}),</span></span>
+<span id="cb10-3"><a href=""></a>    KOKKOS_LAMBDA<span class="op">(</span><span class="dt">int</span> i<span class="op">,</span> <span class="dt">int</span> j<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb10-4"><a href=""></a>        a<span class="op">(</span>i<span class="op">,</span> j<span class="op">)</span> <span class="op">=</span> i <span class="op">+</span> j<span class="op">;</span></span>
+<span id="cb10-5"><a href=""></a>    <span class="op">});</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="tiling" class="slide level2">
+<h2>Tiling</h2>
+<p>Both can be defined with chunk size</p>
+<div class="fragment">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb11-1"><a href=""></a>Kokkos<span class="op">::</span>parallel_for<span class="op">(</span>Kokkos<span class="op">::</span>RangePolicy<span class="op">(</span><span class="dv">0</span><span class="op">,</span> <span class="dv">10</span><span class="op">,</span> <span class="dv">2</span><span class="op">),</span></span>
+<span id="cb11-2"><a href=""></a>    KOKKOS_LAMBDA<span class="op">(</span><span class="dt">int</span> i<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb11-3"><a href=""></a>        a<span class="op">(</span>i<span class="op">)</span> <span class="op">=</span> i<span class="op">;</span></span>
+<span id="cb11-4"><a href=""></a>    <span class="op">});</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="fragment">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb12-1"><a href=""></a>Kokkos<span class="op">::</span>parallel_for<span class="op">(</span></span>
+<span id="cb12-2"><a href=""></a>    Kokkos<span class="op">::</span>MDRangePolicy<span class="op">(</span> <span class="op">{</span><span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">},</span> <span class="op">{</span><span class="dv">10</span><span class="op">,</span> <span class="dv">15</span><span class="op">},</span> <span class="op">{</span><span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">}),</span></span>
+<span id="cb12-3"><a href=""></a>    KOKKOS_LAMBDA<span class="op">(</span><span class="dt">int</span> i<span class="op">,</span> <span class="dt">int</span> j<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb12-4"><a href=""></a>        a<span class="op">(</span>i<span class="op">,</span> j<span class="op">)</span> <span class="op">=</span> i <span class="op">+</span> j<span class="op">;</span></span>
+<span id="cb12-5"><a href=""></a>    <span class="op">});</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="execution-spaces" class="slide level2">
+<h2>Execution spaces</h2>
+<ol type="1">
+<li><code>Kokkos::Cuda</code> = parallel execution on CUDA device</li>
+<li><code>Kokkos::Hip</code> = parallel execution on HIP device</li>
+<li><code>Kokkos::OpenMP</code> = parallel execution on host</li>
+<li><code>Kokkos::Serial</code> = serial execution on host</li>
+</ol>
+<div class="fragment">
+<p>Default execution space: highest enabled at compile time</p>
+<ul>
+<li><code>Kokkos::DefaultExecutionSpace</code> = default execution space</li>
+<li><code>Kokkos::DefaultHostExecutionSpace</code> = default host execution space</li>
+</ul>
+</div>
+</section>
+<section id="using-execution-spaces" class="slide level2">
+<h2>Using execution spaces</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb13-1"><a href=""></a>  Kokkos<span class="op">::</span>View<span class="op">&lt;</span><span class="dt">int</span><span class="op">*,</span> Kokkos<span class="op">::</span>HostSpace<span class="op">&gt;</span> a<span class="op">(</span><span class="st">"a"</span><span class="op">,</span> <span class="dv">10</span><span class="op">);</span></span>
+<span id="cb13-2"><a href=""></a>  Kokkos<span class="op">::</span>parallel_for<span class="op">(</span>Kokkos<span class="op">::</span>RangePolicy<span class="op">&lt;</span>Kokkos<span class="op">::</span>OpenMP<span class="op">&gt;(</span><span class="dv">0</span><span class="op">,</span> <span class="dv">10</span><span class="op">),</span></span>
+<span id="cb13-3"><a href=""></a>      KOKKOS_LAMBDA<span class="op">(</span><span class="dt">int</span> i<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb13-4"><a href=""></a>          a<span class="op">(</span>i<span class="op">)</span> <span class="op">=</span> i<span class="op">;</span></span>
+<span id="cb13-5"><a href=""></a>  <span class="op">});</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="functors" class="slide level2">
+<h2>Functors</h2>
+<ul>
+<li>Can be used instead of lambdas</li>
+<li>For more complex operations</li>
+<li>Can be reused</li>
+<li>Can be templated</li>
+<li>Have to implement some methods</li>
+</ul>
+</section>
+<section id="functor-for-parallel-for" class="slide level2">
+<h2>Functor for parallel for</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-9"><pre class="sourceCode numberSource cpp code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode cpp"><span id="annotated-cell-9-1"><a href="#annotated-cell-9-1"></a><span class="kw">struct</span> MyFunctor <span class="op">{</span></span>
+<span id="annotated-cell-9-2"><a href="#annotated-cell-9-2"></a>    <span class="kw">private</span><span class="op">:</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-9" data-target-annotation="1">1</button><span id="annotated-cell-9-3" class="code-annotation-target"><a href="#annotated-cell-9-3"></a>        Kokkos<span class="op">::</span>View<span class="op">&lt;</span><span class="dt">double</span><span class="op">*&gt;</span> <span class="va">a_</span><span class="op">;</span></span>
+<span id="annotated-cell-9-4"><a href="#annotated-cell-9-4"></a>    <span class="kw">public</span><span class="op">:</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-9" data-target-annotation="2">2</button><span id="annotated-cell-9-5" class="code-annotation-target"><a href="#annotated-cell-9-5"></a>        <span class="kw">explicit</span> MyFunctor<span class="op">(</span>Kokkos<span class="op">::</span>View<span class="op">&lt;</span><span class="dt">double</span><span class="op">*&gt;</span> <span class="va">a_</span><span class="op">)</span> <span class="op">:</span> a<span class="op">(</span><span class="va">a_</span><span class="op">)</span> <span class="op">{}</span></span>
+<span id="annotated-cell-9-6"><a href="#annotated-cell-9-6"></a>        KOKKOS_INLINE_FUNCTION</span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-9" data-target-annotation="3">3</button><span id="annotated-cell-9-7" class="code-annotation-target"><a href="#annotated-cell-9-7"></a>        <span class="dt">void</span> <span class="kw">operator</span><span class="op">()(</span><span class="at">const</span> <span class="dt">int</span> i<span class="op">)</span> <span class="at">const</span> <span class="op">{</span></span>
+<span id="annotated-cell-9-8"><a href="#annotated-cell-9-8"></a>            a<span class="op">(</span>i<span class="op">)</span> <span class="op">=</span> i<span class="op">;</span></span>
+<span id="annotated-cell-9-9"><a href="#annotated-cell-9-9"></a>        <span class="op">}</span></span>
+<span id="annotated-cell-9-10"><a href="#annotated-cell-9-10"></a><span class="op">};</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-9" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-9" data-code-lines="3" data-code-annotation="1">View(s) to operator on</span>
+</dd>
+<dt data-target-cell="annotated-cell-9" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-9" data-code-lines="5" data-code-annotation="2">Constructor that takes view(s), initializes state</span>
+</dd>
+<dt data-target-cell="annotated-cell-9" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-9" data-code-lines="7" data-code-annotation="3"><code>operator()</code> that does the work, cfr. lambda function</span>
+</dd>
+</dl>
+</section>
+<section id="using-parallel-for-functor" class="slide level2">
+<h2>Using parallel for functor</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-10"><pre class="sourceCode numberSource cpp code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode cpp"><span id="annotated-cell-10-1"><a href="#annotated-cell-10-1"></a>Kokkos<span class="op">::</span>View<span class="op">&lt;</span><span class="dt">double</span><span class="op">*&gt;</span> a<span class="op">(</span><span class="st">"a"</span><span class="op">,</span> <span class="dv">10</span><span class="op">);</span></span>
+<span id="annotated-cell-10-2"><a href="#annotated-cell-10-2"></a>Kokkos<span class="op">::</span>View<span class="op">&lt;</span><span class="dt">double</span><span class="op">*&gt;</span> b<span class="op">(</span><span class="st">"b"</span><span class="op">,</span> <span class="dv">10</span><span class="op">);</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="1">1</button><span id="annotated-cell-10-3" class="code-annotation-target"><a href="#annotated-cell-10-3"></a>MyFunctor my_functor<span class="op">(</span>a<span class="op">);</span></span>
+<span id="annotated-cell-10-4"><a href="#annotated-cell-10-4"></a>Kokkos<span class="op">::</span>parallel_for<span class="op">(</span><span class="dv">10</span><span class="op">,</span> my_functor<span class="op">);</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="2">2</button><span id="annotated-cell-10-5" class="code-annotation-target"><a href="#annotated-cell-10-5"></a>Kokkos<span class="op">::</span>parallel_for<span class="op">(</span><span class="dv">10</span><span class="op">,</span> MyFunctor<span class="op">(</span>b<span class="op">));</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-10" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-10" data-code-lines="3" data-code-annotation="1">Create functor with view <code>a</code> to be used multiple times</span>
+</dd>
+<dt data-target-cell="annotated-cell-10" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-10" data-code-lines="5" data-code-annotation="2">Create functor with view <code>b</code> and use it directly</span>
+</dd>
+</dl>
+</section>
+<section id="functor-for-parallel-reduce" class="slide level2">
+<h2>Functor for parallel reduce</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-11"><pre class="sourceCode numberSource cpp code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode cpp"><span id="annotated-cell-11-1"><a href="#annotated-cell-11-1"></a><span class="kw">struct</span> MyReduceFunctor <span class="op">{</span></span>
+<span id="annotated-cell-11-2"><a href="#annotated-cell-11-2"></a>    <span class="kw">private</span><span class="op">:</span></span>
+<span id="annotated-cell-11-3"><a href="#annotated-cell-11-3"></a>        Kokkos<span class="op">::</span>View<span class="op">&lt;</span><span class="dt">double</span><span class="op">*&gt;</span> <span class="va">a_</span><span class="op">;</span></span>
+<span id="annotated-cell-11-4"><a href="#annotated-cell-11-4"></a>    <span class="kw">public</span><span class="op">:</span></span>
+<span id="annotated-cell-11-5"><a href="#annotated-cell-11-5"></a>        <span class="kw">explicit</span> MyReduceFunctor<span class="op">(</span>Kokkos<span class="op">::</span>View<span class="op">&lt;</span><span class="dt">double</span><span class="op">*&gt;</span> <span class="va">a_</span><span class="op">)</span> <span class="op">:</span> a<span class="op">(</span><span class="va">a_</span><span class="op">)</span> <span class="op">{}</span></span>
+<span id="annotated-cell-11-6"><a href="#annotated-cell-11-6"></a>        KOKKOS_INLINE_FUNCTION</span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-11" data-target-annotation="1">1</button><span id="annotated-cell-11-7" class="code-annotation-target"><a href="#annotated-cell-11-7"></a>        <span class="dt">void</span> <span class="kw">operator</span><span class="op">()(</span><span class="at">const</span> <span class="dt">int</span> i<span class="op">,</span> <span class="dt">double</span><span class="op">&amp;</span> sum<span class="op">)</span> <span class="at">const</span> <span class="op">{</span></span>
+<span id="annotated-cell-11-8"><a href="#annotated-cell-11-8"></a>            sum <span class="op">+=</span> a<span class="op">(</span>i<span class="op">);</span></span>
+<span id="annotated-cell-11-9"><a href="#annotated-cell-11-9"></a>        <span class="op">}</span></span>
+<span id="annotated-cell-11-10"><a href="#annotated-cell-11-10"></a>        KOKKOS_INLINE_FUNCTION</span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-11" data-target-annotation="2">2</button><span id="annotated-cell-11-11" class="code-annotation-target"><a href="#annotated-cell-11-11"></a>        <span class="dt">void</span> join<span class="op">(</span><span class="dt">double</span><span class="op">&amp;</span> dst<span class="op">,</span> <span class="at">const</span> <span class="dt">double</span><span class="op">&amp;</span> src<span class="op">)</span> <span class="at">const</span> <span class="op">{</span></span>
+<span id="annotated-cell-11-12"><a href="#annotated-cell-11-12"></a>            dst <span class="op">+=</span> src<span class="op">;</span></span>
+<span id="annotated-cell-11-13"><a href="#annotated-cell-11-13"></a>        <span class="op">}</span></span>
+<span id="annotated-cell-11-14"><a href="#annotated-cell-11-14"></a><span class="op">};</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-11" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-11" data-code-lines="7" data-code-annotation="1"><code>operator()</code> with accumulator</span>
+</dd>
+<dt data-target-cell="annotated-cell-11" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-11" data-code-lines="11" data-code-annotation="2"><code>join()</code> to combine partial results</span>
+</dd>
+</dl>
+</section>
+<section id="using-parallel-reduce-functor" class="slide level2">
+<h2>Using parallel reduce functor</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb14-1"><a href=""></a>Kokkos<span class="op">::</span>View<span class="op">&lt;</span><span class="dt">double</span><span class="op">*&gt;</span> a<span class="op">(</span><span class="st">"a"</span><span class="op">,</span> <span class="dv">10</span><span class="op">);</span></span>
+<span id="cb14-2"><a href=""></a><span class="dt">double</span> sum <span class="op">{</span><span class="fl">0.0</span><span class="op">};</span></span>
+<span id="cb14-3"><a href=""></a>MyReduceFunctor my_reduce_functor<span class="op">(</span>a<span class="op">);</span></span>
+<span id="cb14-4"><a href=""></a>Kokkos<span class="op">::</span>parallel_reduce<span class="op">(</span><span class="dv">10</span><span class="op">,</span> my_reduce_functor<span class="op">,</span> sum<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="synchorization" class="slide level2">
+<h2>Synchorization</h2>
+<ul>
+<li><code>Kokkos::parallel_for</code>, <code>Kokkos::parallel_scan</code>: asynchronous (non-blocking)</li>
+<li><code>Kokkos::parallel_reduce</code>: asynchronous with <code>Kokkos::View</code>, blocking with scalar</li>
+<li>Execution space has its own FIFO queue</li>
+<li><code>Kokkos::deep_copy(dest, src)</code>: blocking copy</li>
+<li><code>Kokkos::deep_copy(exec_space, dest, src)</code>: inserted in FIFO queue</li>
+<li><code>Kokkos::fence()</code> = wait for all parallel operations to finish</li>
+<li><code>exec_space.fence()</code> = wait for all parallel operations on <code>exec_space</code> to finish</li>
+</ul>
+</section>
+<section id="multiple-parallel-for" class="slide level2">
+<h2>Multiple parallel for</h2>
+
+<img data-src="./kokkos/img/async_parallel_for.png" alt="Multiple parallel for" class="r-stretch"></section>
+<section id="multiple-parallel-for-blocked" class="slide level2">
+<h2>Multiple parallel for blocked</h2>
+
+<img data-src="./kokkos/img/async_parallel_for_blocked.png" alt="Parallel for blocked by process" class="r-stretch"></section>
+<section id="parallel-reduce-on-process-scalar" class="slide level2">
+<h2>Parallel reduce on process scalar</h2>
+
+<img data-src="./kokkos/img/parallel_reduce_on_scalar.png" alt="Parallel reduce on process scalar" class="r-stretch"></section>
+<section id="parallel-reduce-on-kokkosview" class="slide level2">
+<h2>Parallel reduce on <code>Kokkos::View</code></h2>
+
+<img data-src="./kokkos/img/parallel_reduce_on_view.png" alt="Parallel reduce on `Kokkos::View`" class="r-stretch"></section>
+<section id="deep-copy-1" class="slide level2">
+<h2>Deep copy</h2>
+
+<img data-src="./kokkos/img/blocking_deep_copy.png" alt="`Kokkos::deep_copy(dest, src) blocks" class="r-stretch"></section>
+<section id="host-and-device-execution-space" class="slide level2">
+<h2>Host and device execution space</h2>
+
+<img data-src="./kokkos/img/openmp_kernel.png" alt="Using both host and device execution spaces" class="r-stretch"></section>
+<section id="deep-copy-issue" class="slide level2">
+<h2>Deep copy issue</h2>
+
+<img data-src="./kokkos/img/deep_copy_sync_issue.png" alt="`Kokkos::deep_copy(dest, src)` issue" class="r-stretch"></section>
+<section id="multiple-execution-spaces" class="slide level2">
+<h2>Multiple execution spaces</h2>
+
+<img data-src="./kokkos/img/multiple_exec_spaces.png" alt="Using multiple execution spaces on device" class="r-stretch"><aside class="notes">
+<p>This uses CUDA streams under the hood.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="execution-space-deep-copy" class="slide level2">
+<h2>Execution space deep copy</h2>
+
+<img data-src="./kokkos/img/async_deep_copy.png" alt="Asynchronous `Kokkos::deep_copy(exec_space, dest, src)`" class="r-stretch"></section>
+<section id="synchorization-gotchas" class="slide level2">
+<h2>Synchorization gotchas</h2>
+<ul>
+<li><code>Kokkos::deep_copy(dest, src)</code> blcoks <em>all</em> execution spaces</li>
+<li><code>Kokkos::fence()</code> blocks <em>all</em> execution spaces</li>
+<li><code>Kokkos::parallel_reduce</code> with scalar blocks process</li>
+<li><code>Kokkos::View</code> that goes out of scopy may block</li>
+<li>Execution space <code>Kokkos::OpenMP</code> may block</li>
+<li>Only one instance of <code>Kokkos::OpenMP</code> execution space</li>
+</ul>
+</section>
+<section id="nested-parallelism" class="slide level2">
+<h2>Nested parallelism</h2>
+<p>Challenge: how to divide the work?</p>
+<div class="fragment">
+<ul>
+<li class="fragment">Use <code>Kokkos::TeamPolicy</code>
+<ul>
+<li class="fragment">League: set of teams</li>
+<li class="fragment">Team: set of threads (warp on NVIDIA/wavefront on AMD)</li>
+</ul></li>
+<li class="fragment">Use execution patterns for, reduce, scan</li>
+<li class="fragment">Threads in team synchronize with <code>Kokkos::TeamThread::fence()</code></li>
+<li class="fragment">Team can share scratch pad memory</li>
+<li class="fragment">Threads can have private scratch pad</li>
+</ul>
+</div>
+</section>
+<section id="nested-execution-policies" class="slide level2">
+<h2>Nested execution policies</h2>
+<ul>
+<li>Top-level: <code>TeamPolicy</code></li>
+<li>Next level
+<ul>
+<li><code>TeamThreadRange</code>, <code>TeamThreadMDRange</code></li>
+<li><code>TeamVectorRange</code>, <code>TeamVectorMDRange</code></li>
+<li><code>ThreadVectorRange</code>, <code>ThreadVectorMDRange</code></li>
+</ul></li>
+</ul>
+</section>
+<section id="example-1-vecy-a-cdot-vecx" class="slide level2">
+<h2>Example 1: <span class="math inline">\(\vec{y} = A \cdot \vec{x}\)</span></h2>
+<p>Where <span class="math inline">\(\vec{y} \in \mathbb{R}^M\)</span>, <span class="math inline">\(A \in \mathbb{R}^{M \times N}\)</span>, <span class="math inline">\(\vec{x} \in
+\mathbb{R}^N\)</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource cpp fragment number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb15-1"><a href=""></a>Kokkos<span class="op">::</span>parallel_for<span class="op">(</span><span class="st">"y=A*x"</span><span class="op">,</span> M<span class="op">,</span></span>
+<span id="cb15-2"><a href=""></a>    KOKKOS_LAMBDA<span class="op">(</span><span class="at">const</span> <span class="dt">int</span> i<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb15-3"><a href=""></a>        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> N<span class="op">;</span> <span class="op">++</span>j<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb15-4"><a href=""></a>            y<span class="op">(</span>i<span class="op">)</span> <span class="op">=</span> A<span class="op">(</span>i<span class="op">,</span> j<span class="op">)*</span>x<span class="op">(</span>j<span class="op">);</span></span>
+<span id="cb15-5"><a href=""></a>        <span class="op">}</span></span>
+<span id="cb15-6"><a href=""></a>    <span class="op">});</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="columns">
+<div class="column" style="width:70%;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-31"><pre class="sourceCode numberSource cpp fragment code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode cpp"><span id="annotated-cell-31-1"><a href="#annotated-cell-31-1"></a>Kokkos<span class="op">::</span>parallel_for<span class="op">(</span><span class="st">"y=A*x"</span><span class="op">,</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-31" data-target-annotation="1">1</button><span id="annotated-cell-31-2" class="code-annotation-target"><a href="#annotated-cell-31-2"></a>    Kokkos<span class="op">::</span>TeamPolicy<span class="op">&lt;&gt;(</span>M<span class="op">,</span> Kokkos<span class="op">::</span>AUTO<span class="op">),</span></span>
+<span id="annotated-cell-31-3"><a href="#annotated-cell-31-3"></a>    KOKKOS_LAMBDA<span class="op">(</span><span class="dt">int</span> i<span class="op">)</span> <span class="op">{</span></span>
+<span id="annotated-cell-31-4"><a href="#annotated-cell-31-4"></a>        <span class="dt">double</span> row_sum <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-31" data-target-annotation="2">2</button><span id="annotated-cell-31-5" class="code-annotation-target"><a href="#annotated-cell-31-5"></a>        Kokkos<span class="op">::</span>parallel_reduce<span class="op">(</span><span class="st">"y(i)"</span></span>
+<span id="annotated-cell-31-6"><a href="#annotated-cell-31-6"></a>            Kokkos<span class="op">::</span>TeamThreadRange<span class="op">(</span>team<span class="op">,</span> N<span class="op">),</span></span>
+<span id="annotated-cell-31-7"><a href="#annotated-cell-31-7"></a>            <span class="op">[=]</span> <span class="op">(</span><span class="dt">int</span> j<span class="op">,</span> <span class="dt">double</span><span class="op">&amp;</span> lsum<span class="op">)</span> <span class="op">{</span></span>
+<span id="annotated-cell-31-8"><a href="#annotated-cell-31-8"></a>                lsum <span class="op">+=</span> A<span class="op">(</span>i<span class="op">,</span>j<span class="op">)*</span>x<span class="op">(</span>j<span class="op">);</span></span>
+<span id="annotated-cell-31-9"><a href="#annotated-cell-31-9"></a>            <span class="op">},</span> row_sum<span class="op">);</span></span>
+<span id="annotated-cell-31-10"><a href="#annotated-cell-31-10"></a>        y<span class="op">(</span>i<span class="op">)</span> <span class="op">=</span> row_sum<span class="op">;</span></span>
+<span id="annotated-cell-31-11"><a href="#annotated-cell-31-11"></a><span class="op">});</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-31" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-31" data-code-lines="2" data-code-annotation="1">Create league of teams of threads</span>
+</dd>
+<dt data-target-cell="annotated-cell-31" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-31" data-code-lines="5" data-code-annotation="2">Exploit inner parallelism</span>
+</dd>
+</dl>
+</div><div class="column" style="width:30%;">
+<div class="fragment">
+<p>Better performance for <span class="math inline">\(M \ll N\)</span></p>
+</div>
+</div></div>
+</section>
+<section id="example-2-s-vecy-cdot-a-cdot-vecx" class="slide level2">
+<h2>Example 2: <span class="math inline">\(s = \vec{y} \cdot A \cdot \vec{x}\)</span></h2>
+<p>Where <span class="math inline">\(s \in \mathbb{R}\)</span>, <span class="math inline">\(\vec{y} \in \mathbb{R}^M\)</span>, <span class="math inline">\(A \in \mathbb{R}^{M
+\times N}\)</span>, <span class="math inline">\(\vec{x} \in \mathbb{R}^N\)</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-14"><pre class="sourceCode numberSource cpp fragmet code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode cpp"><span id="annotated-cell-14-1"><a href="#annotated-cell-14-1"></a><span class="kw">using</span> <span class="dt">policy_t</span> <span class="op">=</span> Kokkos<span class="op">::</span>TeamPolicy<span class="op">&lt;&gt;;</span></span>
+<span id="annotated-cell-14-2"><a href="#annotated-cell-14-2"></a><span class="dt">float</span> s <span class="op">{</span><span class="fl">0.0</span><span class="bu">f</span><span class="op">};</span></span>
+<span id="annotated-cell-14-3"><a href="#annotated-cell-14-3"></a>Kokkos<span class="op">::</span>parallel_reduce<span class="op">(</span><span class="st">"y*A*x"</span><span class="op">,</span> <span class="dt">policy_t</span><span class="op">(</span>M<span class="op">,</span> Kokkos<span class="op">::</span>AUTO<span class="op">),</span></span>
+<span id="annotated-cell-14-4"><a href="#annotated-cell-14-4"></a>    KOKKOS_LAMBDA<span class="op">(</span><span class="at">const</span> <span class="dt">policy_t</span><span class="op">::</span><span class="dt">member_type</span><span class="op">&amp;</span> team_member<span class="op">,</span> <span class="dt">float</span><span class="op">&amp;</span> sum<span class="op">)</span> <span class="op">{</span></span>
+<span id="annotated-cell-14-5"><a href="#annotated-cell-14-5"></a>        <span class="at">const</span> <span class="dt">int</span> i <span class="op">{</span>team_member<span class="op">.</span>league_rank<span class="op">()};</span></span>
+<span id="annotated-cell-14-6"><a href="#annotated-cell-14-6"></a>        <span class="dt">float</span> row_sum <span class="op">{</span><span class="fl">0.0</span><span class="bu">f</span><span class="op">};</span></span>
+<span id="annotated-cell-14-7"><a href="#annotated-cell-14-7"></a>        Kokkos<span class="op">::</span>parallel_reduce<span class="op">(</span></span>
+<span id="annotated-cell-14-8"><a href="#annotated-cell-14-8"></a>            Kokkos<span class="op">::</span>TeamThreadRange<span class="op">(</span>team_member<span class="op">,</span> N<span class="op">),</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-14" data-target-annotation="1">1</button><span id="annotated-cell-14-9" class="code-annotation-target"><a href="#annotated-cell-14-9"></a>            <span class="op">[=]</span> <span class="op">(</span><span class="at">const</span> <span class="dt">int</span> j<span class="op">,</span> <span class="dt">float</span><span class="op">&amp;</span> row_sum<span class="op">)</span> <span class="op">{</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-14" data-target-annotation="2">2</button><span id="annotated-cell-14-10" class="code-annotation-target"><a href="#annotated-cell-14-10"></a>                row_sum <span class="op">+=</span> A<span class="op">(</span>i<span class="op">,</span> j<span class="op">)*</span>x<span class="op">(</span>j<span class="op">);</span></span>
+<span id="annotated-cell-14-11"><a href="#annotated-cell-14-11"></a>            <span class="op">},</span> row_sum<span class="op">);</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-14" data-target-annotation="3">3</button><span id="annotated-cell-14-12" class="code-annotation-target"><a href="#annotated-cell-14-12"></a>        Kokkos<span class="op">::</span>single<span class="op">(</span>Kokkos<span class="op">::</span>PerTeam<span class="op">(</span>team_member<span class="op">),</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-14" data-target-annotation="4">4</button><span id="annotated-cell-14-13" class="code-annotation-target"><a href="#annotated-cell-14-13"></a>            <span class="op">[&amp;]()</span> <span class="op">{</span> result <span class="op">+=</span> y<span class="op">(</span>i<span class="op">)*</span>row_sum<span class="op">;</span> <span class="op">});</span></span>
+<span id="annotated-cell-14-14"><a href="#annotated-cell-14-14"></a>    <span class="op">},</span> s<span class="op">);</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-14" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-14" data-code-lines="9" data-code-annotation="1">Note: capture by value</span>
+</dd>
+<dt data-target-cell="annotated-cell-14" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-14" data-code-lines="10" data-code-annotation="2">Note: <em>A</em> is accessed row-wise!</span>
+</dd>
+<dt data-target-cell="annotated-cell-14" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-14" data-code-lines="12" data-code-annotation="3">Only one thread per team should update!</span>
+</dd>
+<dt data-target-cell="annotated-cell-14" data-target-annotation="4">4</dt>
+<dd>
+<span data-code-cell="annotated-cell-14" data-code-lines="13" data-code-annotation="4">Note: capture by reference</span>
+</dd>
+</dl>
+</section>
+<section id="scratch-pads" class="slide level2">
+<h2>Scratch pads</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<ul>
+<li>Level-0
+<ul>
+<li>Limited size, fast</li>
+<li>“Manual L1 cache”</li>
+</ul></li>
+<li>Level-1
+<ul>
+<li>Larger, but less performance</li>
+<li>“Nearest fast storage”</li>
+</ul></li>
+</ul>
+</div><div class="column fragment" style="width:60%;">
+<ul>
+<li>Team or thread private memory
+<ul>
+<li>Per work item temp storage</li>
+<li>Size <span class="math inline">\(\propto\)</span> nr. threads</li>
+</ul></li>
+<li>Manually managed cache
+<ul>
+<li>Cache frequently used data</li>
+<li>exposes on-core scratch space (e.g., NVIDIA GPU shared memory)</li>
+</ul></li>
+</ul>
+</div></div>
+</section>
+<section id="how-to-use-scratch-pads" class="slide level2">
+<h2>How to use scratch pads?</h2>
+<ul>
+<li><code>TeamPolicy</code></li>
+<li>Determine actual scratch pad size</li>
+<li>Execution pattern
+<ul>
+<li>Create scratch view</li>
+<li>Initialize scratch view using <code>VectorTeamPolicy</code></li>
+<li>Use scratch view</li>
+</ul></li>
+</ul>
+</section>
+<section id="base-version" class="slide level2">
+<h2>Base version</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-15"><pre class="sourceCode numberSource cpp code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode cpp"><span id="annotated-cell-15-1"><a href="#annotated-cell-15-1"></a>Kokkos<span class="op">::</span>View<span class="op">&lt;</span><span class="dt">double</span><span class="op">***&gt;</span> A<span class="op">(</span><span class="st">"A"</span><span class="op">,</span> nr_elements<span class="op">,</span> nr_qp<span class="op">,</span> vector_size<span class="op">);</span></span>
+<span id="annotated-cell-15-2"><a href="#annotated-cell-15-2"></a>Kokkos<span class="op">::</span>View<span class="op">&lt;</span><span class="dt">double</span><span class="op">**&gt;</span> B<span class="op">(</span><span class="st">"B"</span><span class="op">,</span> nr_elements<span class="op">,</span> vector_size<span class="op">);</span></span>
+<span id="annotated-cell-15-3"><a href="#annotated-cell-15-3"></a>Kokkos<span class="op">::</span>View<span class="op">&lt;</span><span class="dt">double</span><span class="op">**&gt;</span> C<span class="op">(</span><span class="st">"C"</span><span class="op">,</span> nr_elements<span class="op">,</span> nr_qp<span class="op">);</span></span>
+<span id="annotated-cell-15-4"><a href="#annotated-cell-15-4"></a></span>
+<span id="annotated-cell-15-5"><a href="#annotated-cell-15-5"></a>Kokkos<span class="op">::</span>parallel_for<span class="op">(</span></span>
+<span id="annotated-cell-15-6"><a href="#annotated-cell-15-6"></a>    <span class="st">"C=A*B"</span><span class="op">,</span> Kokkos<span class="op">::</span>TeamPolicy<span class="op">&lt;&gt;(</span>nr_elements<span class="op">,</span> Kokkos<span class="op">::</span>AUTO<span class="op">),</span></span>
+<span id="annotated-cell-15-7"><a href="#annotated-cell-15-7"></a>    KOKKOS_LAMBDA<span class="op">(</span><span class="at">const</span> Kokkos<span class="op">::</span>TeamPolicy<span class="op">&lt;&gt;::</span><span class="dt">member_type</span><span class="op">&amp;</span> team<span class="op">)</span> <span class="op">{</span></span>
+<span id="annotated-cell-15-8"><a href="#annotated-cell-15-8"></a>      <span class="at">const</span> <span class="dt">int</span> element<span class="op">{</span>team<span class="op">.</span>league_rank<span class="op">()};</span></span>
+<span id="annotated-cell-15-9"><a href="#annotated-cell-15-9"></a>      Kokkos<span class="op">::</span>parallel_for<span class="op">(</span>Kokkos<span class="op">::</span>TeamThreadRange<span class="op">(</span>team<span class="op">,</span> nr_qp<span class="op">),</span></span>
+<span id="annotated-cell-15-10"><a href="#annotated-cell-15-10"></a>                           <span class="op">[&amp;](</span><span class="at">const</span> <span class="dt">int</span><span class="op">&amp;</span> qp<span class="op">)</span> <span class="op">{</span></span>
+<span id="annotated-cell-15-11"><a href="#annotated-cell-15-11"></a>                             <span class="dt">double</span> total<span class="op">{</span><span class="fl">0.0</span><span class="op">};</span></span>
+<span id="annotated-cell-15-12"><a href="#annotated-cell-15-12"></a>                             <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> vector_size<span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> <span class="op">{</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-15" data-target-annotation="1">1</button><span id="annotated-cell-15-13" class="code-annotation-target"><a href="#annotated-cell-15-13"></a>                               total <span class="op">+=</span> A<span class="op">(</span>element<span class="op">,</span> qp<span class="op">,</span> i<span class="op">)</span> <span class="op">*</span> B<span class="op">(</span>element<span class="op">,</span> i<span class="op">);</span></span>
+<span id="annotated-cell-15-14"><a href="#annotated-cell-15-14"></a>                             <span class="op">}</span></span>
+<span id="annotated-cell-15-15"><a href="#annotated-cell-15-15"></a>                             C<span class="op">(</span>element<span class="op">,</span> qp<span class="op">)</span> <span class="op">=</span> total<span class="op">;</span></span>
+<span id="annotated-cell-15-16"><a href="#annotated-cell-15-16"></a>                           <span class="op">});</span></span>
+<span id="annotated-cell-15-17"><a href="#annotated-cell-15-17"></a>    <span class="op">});</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-15" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-15" data-code-lines="13" data-code-annotation="1">Note: each thread in a team uses same <code>B(element, :)</code></span>
+</dd>
+</dl>
+</section>
+<section id="determine-scratch-pad-size" class="slide level2">
+<h2>Determine scratch pad size</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-16"><pre class="sourceCode numberSource cpp code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode cpp"><button class="code-annotation-anchor" data-target-cell="annotated-cell-16" data-target-annotation="1">1</button><span id="annotated-cell-16-1" class="code-annotation-target"><a href="#annotated-cell-16-1"></a><span class="kw">using</span> ScratchView <span class="op">=</span></span>
+<span id="annotated-cell-16-2"><a href="#annotated-cell-16-2"></a>    Kokkos<span class="op">::</span>View<span class="op">&lt;</span><span class="dt">double</span><span class="op">*,</span></span>
+<span id="annotated-cell-16-3"><a href="#annotated-cell-16-3"></a>                 Kokkos<span class="op">::</span>DefaultExecutionSpace<span class="op">::</span>scratch_memory_space<span class="op">&gt;;</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-16" data-target-annotation="2">2</button><span id="annotated-cell-16-4" class="code-annotation-target"><a href="#annotated-cell-16-4"></a><span class="dt">size_t</span> scratch_size <span class="op">=</span> ScratchView<span class="op">::</span>shmem_size<span class="op">(</span>vector_size<span class="op">);</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-16" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-16" data-code-lines="1" data-code-annotation="1">Define scratch view type based on execution space</span>
+</dd>
+<dt data-target-cell="annotated-cell-16" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-16" data-code-lines="4" data-code-annotation="2">Determine size of scratch space to store <code>vector_size</code> values of type <code>double</code></span>
+</dd>
+</dl>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Required to ensure alignment taken into account!</p>
+</div>
+</div>
+</div>
+</section>
+<section id="reserve-scratch-pad-memory" class="slide level2">
+<h2>Reserve scratch pad memory</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-17"><pre class="sourceCode numberSource cpp code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode cpp"><button class="code-annotation-anchor" data-target-cell="annotated-cell-17" data-target-annotation="1">1</button><span id="annotated-cell-17-1" class="code-annotation-target"><a href="#annotated-cell-17-1"></a><span class="at">const</span> <span class="dt">int</span> level <span class="op">{</span><span class="dv">0</span><span class="op">};</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-17" data-target-annotation="2">2</button><span id="annotated-cell-17-2" class="code-annotation-target"><a href="#annotated-cell-17-2"></a>Kokkos<span class="op">::</span>TeamPolicy<span class="op">&lt;&gt;</span> policy<span class="op">(</span>nr_elements<span class="op">,</span> Kokkos<span class="op">::</span>AUTO<span class="op">);</span></span>
+<span id="annotated-cell-17-3"><a href="#annotated-cell-17-3"></a>Kokkos<span class="op">::</span>parallel_for<span class="op">(</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-17" data-target-annotation="3">3</button><span id="annotated-cell-17-4" class="code-annotation-target"><a href="#annotated-cell-17-4"></a>    policy<span class="op">.</span>set_scratch_size<span class="op">(</span>level<span class="op">,</span> Kokkos<span class="op">::</span>PerTeam<span class="op">(</span>scratch_size<span class="op">)),</span></span>
+<span id="annotated-cell-17-5"><a href="#annotated-cell-17-5"></a>    <span class="op">...</span></span>
+<span id="annotated-cell-17-6"><a href="#annotated-cell-17-6"></a><span class="op">);</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-17" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-17" data-code-lines="1" data-code-annotation="1">Set the scratch pad level</span>
+</dd>
+<dt data-target-cell="annotated-cell-17" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-17" data-code-lines="2" data-code-annotation="2">Create the <code>TeamPolicy</code> to use</span>
+</dd>
+<dt data-target-cell="annotated-cell-17" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-17" data-code-lines="4" data-code-annotation="3">Allocate scratch pad at given level of given size</span>
+</dd>
+</dl>
+<div class="fragment">
+<ul>
+<li>Scratch can be <code>Kokkos::PerTeam</code> and/or <code>Kokkos::PerThread</code></li>
+<li>Both levels can be used</li>
+<li>Only allocates memory</li>
+</ul>
+</div>
+</section>
+<section id="create-scratch-view-and-initialize" class="slide level2">
+<h2>Create scratch view and initialize</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-18"><pre class="sourceCode numberSource cpp code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode cpp"><span id="annotated-cell-18-1"><a href="#annotated-cell-18-1"></a>Kokkos<span class="op">::</span>parallel_for<span class="op">(</span></span>
+<span id="annotated-cell-18-2"><a href="#annotated-cell-18-2"></a>    policy<span class="op">.</span>set_scratch_size<span class="op">(</span>level<span class="op">,</span> Kokkos<span class="op">::</span>PerTeam<span class="op">(</span>scratch_size<span class="op">)),</span></span>
+<span id="annotated-cell-18-3"><a href="#annotated-cell-18-3"></a>    KOKKOS_LAMBDA<span class="op">(</span><span class="at">const</span> Kokkos<span class="op">::</span>TeamPolicy<span class="op">&lt;&gt;::</span><span class="dt">member_type</span><span class="op">&amp;</span> team<span class="op">)</span> <span class="op">{</span></span>
+<span id="annotated-cell-18-4"><a href="#annotated-cell-18-4"></a>      <span class="at">const</span> <span class="dt">int</span> element<span class="op">{</span>team<span class="op">.</span>league_rank<span class="op">()};</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-18" data-target-annotation="1">1</button><span id="annotated-cell-18-5" class="code-annotation-target"><a href="#annotated-cell-18-5"></a>      ScratchView scratch<span class="op">(</span>team<span class="op">.</span>team_scratch<span class="op">(</span>level<span class="op">),</span> vector_size<span class="op">);</span></span>
+<span id="annotated-cell-18-6"><a href="#annotated-cell-18-6"></a>      Kokkos<span class="op">::</span>parallel_for<span class="op">(</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-18" data-target-annotation="2">2</button><span id="annotated-cell-18-7" class="code-annotation-target"><a href="#annotated-cell-18-7"></a>          Kokkos<span class="op">::</span>TeamVectorRange<span class="op">(</span>team<span class="op">,</span> vector_size<span class="op">),</span></span>
+<span id="annotated-cell-18-8"><a href="#annotated-cell-18-8"></a>          <span class="op">[&amp;](</span><span class="at">const</span> <span class="dt">int</span><span class="op">&amp;</span> i<span class="op">)</span> <span class="op">{</span> scratch<span class="op">(</span>i<span class="op">)</span> <span class="op">=</span> B<span class="op">(</span>element<span class="op">,</span> i<span class="op">);</span> <span class="op">});</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-18" data-target-annotation="3">3</button><span id="annotated-cell-18-9" class="code-annotation-target"><a href="#annotated-cell-18-9"></a>      team<span class="op">.</span>team_barrier<span class="op">();</span></span>
+<span id="annotated-cell-18-10"><a href="#annotated-cell-18-10"></a>      <span class="op">...</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-18" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-18" data-code-lines="5" data-code-annotation="1">Create scratch view at given level and of given size</span>
+</dd>
+<dt data-target-cell="annotated-cell-18" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-18" data-code-lines="7" data-code-annotation="2">Copy row of <code>B</code> in parallel</span>
+</dd>
+<dt data-target-cell="annotated-cell-18" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-18" data-code-lines="9" data-code-annotation="3">Barrier to ensure <code>scratch</code> is fully initialized</span>
+</dd>
+</dl>
+<div class="fragment">
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Warning</strong></p>
+</div>
+<div class="callout-content">
+<p><code>Kokkos::parallel_for</code> can run asynchronously, threads will not synchronize</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="putting-it-all-together" class="slide level2">
+<h2>Putting it all together</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-19"><pre class="sourceCode numberSource cpp code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode cpp"><span id="annotated-cell-19-1"><a href="#annotated-cell-19-1"></a>Kokkos<span class="op">::</span>parallel_for<span class="op">(</span></span>
+<span id="annotated-cell-19-2"><a href="#annotated-cell-19-2"></a>    <span class="st">"C=A*B"</span><span class="op">,</span> policy<span class="op">.</span>set_scratch_size<span class="op">(</span>level<span class="op">,</span> Kokkos<span class="op">::</span>PerTeam<span class="op">(</span>scratch_size<span class="op">)),</span></span>
+<span id="annotated-cell-19-3"><a href="#annotated-cell-19-3"></a>    KOKKOS_LAMBDA<span class="op">(</span><span class="at">const</span> Kokkos<span class="op">::</span>TeamPolicy<span class="op">&lt;&gt;::</span><span class="dt">member_type</span><span class="op">&amp;</span> team<span class="op">)</span> <span class="op">{</span></span>
+<span id="annotated-cell-19-4"><a href="#annotated-cell-19-4"></a>      <span class="at">const</span> <span class="dt">int</span> element<span class="op">{</span>team<span class="op">.</span>league_rank<span class="op">()};</span></span>
+<span id="annotated-cell-19-5"><a href="#annotated-cell-19-5"></a>      ScratchView scratch<span class="op">(</span>team<span class="op">.</span>team_scratch<span class="op">(</span>level<span class="op">),</span> vector_size<span class="op">);</span></span>
+<span id="annotated-cell-19-6"><a href="#annotated-cell-19-6"></a>      Kokkos<span class="op">::</span>parallel_for<span class="op">(</span></span>
+<span id="annotated-cell-19-7"><a href="#annotated-cell-19-7"></a>          Kokkos<span class="op">::</span>TeamVectorRange<span class="op">(</span>team<span class="op">,</span> vector_size<span class="op">),</span></span>
+<span id="annotated-cell-19-8"><a href="#annotated-cell-19-8"></a>          <span class="op">[&amp;](</span><span class="at">const</span> <span class="dt">int</span><span class="op">&amp;</span> i<span class="op">)</span> <span class="op">{</span> scratch<span class="op">(</span>i<span class="op">)</span> <span class="op">=</span> B<span class="op">(</span>element<span class="op">,</span> i<span class="op">);</span> <span class="op">});</span></span>
+<span id="annotated-cell-19-9"><a href="#annotated-cell-19-9"></a>      team<span class="op">.</span>team_barrier<span class="op">();</span></span>
+<span id="annotated-cell-19-10"><a href="#annotated-cell-19-10"></a>      Kokkos<span class="op">::</span>parallel_for<span class="op">(</span>Kokkos<span class="op">::</span>TeamThreadRange<span class="op">(</span>team<span class="op">,</span> nr_qp<span class="op">),</span></span>
+<span id="annotated-cell-19-11"><a href="#annotated-cell-19-11"></a>                           <span class="op">[&amp;](</span><span class="at">const</span> <span class="dt">int</span><span class="op">&amp;</span> qp<span class="op">)</span> <span class="op">{</span></span>
+<span id="annotated-cell-19-12"><a href="#annotated-cell-19-12"></a>                             <span class="dt">double</span> total<span class="op">{</span><span class="fl">0.0</span><span class="op">};</span></span>
+<span id="annotated-cell-19-13"><a href="#annotated-cell-19-13"></a>                             <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> vector_size<span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> <span class="op">{</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-19" data-target-annotation="1">1</button><span id="annotated-cell-19-14" class="code-annotation-target"><a href="#annotated-cell-19-14"></a>                               total <span class="op">+=</span> A<span class="op">(</span>element<span class="op">,</span> qp<span class="op">,</span> i<span class="op">)</span> <span class="op">*</span> scratch<span class="op">(</span>i<span class="op">);</span></span>
+<span id="annotated-cell-19-15"><a href="#annotated-cell-19-15"></a>                             <span class="op">}</span></span>
+<span id="annotated-cell-19-16"><a href="#annotated-cell-19-16"></a>                             C<span class="op">(</span>element<span class="op">,</span> qp<span class="op">)</span> <span class="op">=</span> total<span class="op">;</span></span>
+<span id="annotated-cell-19-17"><a href="#annotated-cell-19-17"></a>                           <span class="op">});</span></span>
+<span id="annotated-cell-19-18"><a href="#annotated-cell-19-18"></a>    <span class="op">});</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-19" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-19" data-code-lines="14" data-code-annotation="1">Each thread in team uses same <code>scratch</code></span>
+</dd>
+</dl>
+<p>All threads in team use per team <code>scratch</code></p>
+<aside class="notes">
+<p>Scratch pads are not deallocated and can not be deallocated. This would complicate memory management too much.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="kokkos-library" class="slide level2">
+<h2>Kokkos library</h2>
+<ul>
+<li>Algorithms
+<ul>
+<li>Random numbers</li>
+<li>Sorting</li>
+</ul></li>
+<li>Containers
+<ul>
+<li>Unordered map</li>
+<li>Bitset</li>
+</ul></li>
+</ul>
+<div class="fragment">
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Warning</strong></p>
+</div>
+<div class="callout-content">
+<p>Experimental features!</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="random-numbers" class="slide level2">
+<h2>Random numbers</h2>
+<div style="font-size: 90%;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-32"><pre class="sourceCode numberSource cpp code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode cpp"><button class="code-annotation-anchor" data-target-cell="annotated-cell-32" data-target-annotation="1">1</button><span id="annotated-cell-32-1" class="code-annotation-target"><a href="#annotated-cell-32-1"></a><span class="pp">#include </span><span class="im">&lt;Kokkos_Random.hpp&gt;</span></span>
+<span id="annotated-cell-32-2"><a href="#annotated-cell-32-2"></a><span class="op">...</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-32" data-target-annotation="2">2</button><span id="annotated-cell-32-3" class="code-annotation-target"><a href="#annotated-cell-32-3"></a>Kokkos<span class="op">::</span>Random_XorShift64_Pool<span class="op">&lt;</span>Kokkos<span class="op">::</span>DefaultExecutionSpace<span class="op">&gt;</span> random_pool<span class="op">(</span>seed<span class="op">);</span></span>
+<span id="annotated-cell-32-4"><a href="#annotated-cell-32-4"></a><span class="op">...</span></span>
+<span id="annotated-cell-32-5"><a href="#annotated-cell-32-5"></a>Kokkos<span class="op">::</span>parallel_for<span class="op">(</span><span class="st">"walks"</span><span class="op">,</span> nr_walks<span class="op">,</span> KOKKOS_LAMBDA<span class="op">(</span><span class="at">const</span> <span class="dt">int</span> walk<span class="op">)</span> <span class="op">{</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-32" data-target-annotation="3">3</button><span id="annotated-cell-32-6" class="code-annotation-target"><a href="#annotated-cell-32-6"></a>      <span class="kw">auto</span> generator <span class="op">=</span> random_pool<span class="op">.</span>get_state<span class="op">();</span></span>
+<span id="annotated-cell-32-7"><a href="#annotated-cell-32-7"></a>      <span class="dt">int</span> pos <span class="op">=</span> max_steps<span class="op">;</span></span>
+<span id="annotated-cell-32-8"><a href="#annotated-cell-32-8"></a>      <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> step <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> step <span class="op">&lt;</span> <span class="op">(</span>walk <span class="op">%</span> <span class="dv">2</span> <span class="op">==</span> <span class="dv">0</span> <span class="op">?</span> max_steps <span class="op">:</span> max_steps <span class="op">-</span> <span class="dv">1</span><span class="op">);</span></span>
+<span id="annotated-cell-32-9"><a href="#annotated-cell-32-9"></a>           <span class="op">++</span>step<span class="op">)</span> <span class="op">{</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-32" data-target-annotation="4">4</button><span id="annotated-cell-32-10" class="code-annotation-target"><a href="#annotated-cell-32-10"></a>        pos <span class="op">+=</span> generator<span class="op">.</span>drand<span class="op">()</span> <span class="op">&lt;</span> <span class="fl">0.5</span> <span class="op">?</span> <span class="op">-</span><span class="dv">1</span> <span class="op">:</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="annotated-cell-32-11"><a href="#annotated-cell-32-11"></a>      <span class="op">}</span></span>
+<span id="annotated-cell-32-12"><a href="#annotated-cell-32-12"></a>      distance_atomic<span class="op">(</span>pos<span class="op">)++;</span></span>
+<span id="annotated-cell-32-13"><a href="#annotated-cell-32-13"></a>    <span class="op">});</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-32" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-32" data-code-lines="1" data-code-annotation="1">Include header file for random number generator</span>
+</dd>
+<dt data-target-cell="annotated-cell-32" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-32" data-code-lines="3" data-code-annotation="2">Create a pool of generators with given <code>seed</code></span>
+</dd>
+<dt data-target-cell="annotated-cell-32" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-32" data-code-lines="6" data-code-annotation="3">For each thread, get generator from the pool</span>
+</dd>
+<dt data-target-cell="annotated-cell-32" data-target-annotation="4">4</dt>
+<dd>
+<span data-code-cell="annotated-cell-32" data-code-lines="10" data-code-annotation="4">Get a random number <span class="math inline">\(x\)</span> such that <span class="math inline">\(0 \le x \lt 1\)</span></span>
+</dd>
+</dl>
+</div>
+</section>
+<section id="why-kernels" class="slide level2">
+<h2>Why kernels?</h2>
+<ul>
+<li>Don’t program your own matrix-matrix multiplication!</li>
+<li>Portable performance</li>
+<li>Can use vendor libraries</li>
+</ul>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Separate download/installation</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="which-kernels" class="slide level2">
+<h2>Which kernels?</h2>
+<ul>
+<li>Dense linear algebra: BLAS, batched BLAS, some LAPACK</li>
+<li>Sparse linear algebra, CRS (Compressed Row Storage)</li>
+<li>Graph algorithms: distance-1/distance-2 graph coloring, bipartite graph coloring</li>
+<li>Sparse solvers: variants of Gauss-Seidel</li>
+<li>ODE solvers: explicit Runge-Kutta, implicit BDF, Newton</li>
+</ul>
+</section>
+<section id="reference-further-reading" class="slide level2">
+<h2>Reference &amp; further reading</h2>
+<ul>
+<li><p><a href="https://kokkos.org/kokkos-core-wiki/index.html">Kokkos documentation</a></p></li>
+<li><p><a href="https://www.youtube.com/playlist?list=PLqtSvL1MDrdFgDYpITs7aQAH9vkrs6TOF">The Kokkos lectures</a></p></li>
+<li><p><a href="https://github.com/kokkos/kokkos-tutorials">Kokkos tutorials</a></p></li>
+<li><p><a href="https://github.com/kokkos">Kokkos repositories on GitHub</a></p></li>
+</ul>
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="heterogeneous_programming_with_kokkos_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="heterogeneous_programming_with_kokkos_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="heterogeneous_programming_with_kokkos_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="heterogeneous_programming_with_kokkos_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="heterogeneous_programming_with_kokkos_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="heterogeneous_programming_with_kokkos_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="heterogeneous_programming_with_kokkos_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="heterogeneous_programming_with_kokkos_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="heterogeneous_programming_with_kokkos_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="heterogeneous_programming_with_kokkos_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+            let selectedAnnoteEl;
+            const selectorForAnnotation = ( cell, annotation) => {
+              let cellAttr = 'data-code-cell="' + cell + '"';
+              let lineAttr = 'data-code-annotation="' +  annotation + '"';
+              const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+              return selector;
+            }
+            const selectCodeLines = (annoteEl) => {
+              const doc = window.document;
+              const targetCell = annoteEl.getAttribute("data-target-cell");
+              const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+              const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+              const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+              const lineIds = lines.map((line) => {
+                return targetCell + "-" + line;
+              })
+              let top = null;
+              let height = null;
+              let parent = null;
+              if (lineIds.length > 0) {
+                  //compute the position of the single el (top and bottom and make a div)
+                  const el = window.document.getElementById(lineIds[0]);
+                  top = el.offsetTop;
+                  height = el.offsetHeight;
+                  parent = el.parentElement.parentElement;
+                if (lineIds.length > 1) {
+                  const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+                  const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+                  height = bottom - top;
+                }
+                if (top !== null && height !== null && parent !== null) {
+                  // cook up a div (if necessary) and position it 
+                  let div = window.document.getElementById("code-annotation-line-highlight");
+                  if (div === null) {
+                    div = window.document.createElement("div");
+                    div.setAttribute("id", "code-annotation-line-highlight");
+                    div.style.position = 'absolute';
+                    parent.appendChild(div);
+                  }
+                  div.style.top = top - 2 + "px";
+                  div.style.height = height + 4 + "px";
+                  div.style.left = 0;
+                  let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+                  if (gutterDiv === null) {
+                    gutterDiv = window.document.createElement("div");
+                    gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                    gutterDiv.style.position = 'absolute';
+                    const codeCell = window.document.getElementById(targetCell);
+                    const gutter = codeCell.querySelector('.code-annotation-gutter');
+                    gutter.appendChild(gutterDiv);
+                  }
+                  gutterDiv.style.top = top - 2 + "px";
+                  gutterDiv.style.height = height + 4 + "px";
+                }
+                selectedAnnoteEl = annoteEl;
+              }
+            };
+            const unselectCodeLines = () => {
+              const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+              elementsIds.forEach((elId) => {
+                const div = window.document.getElementById(elId);
+                if (div) {
+                  div.remove();
+                }
+              });
+              selectedAnnoteEl = undefined;
+            };
+              // Handle positioning of the toggle
+          window.addEventListener(
+            "resize",
+            throttle(() => {
+              elRect = undefined;
+              if (selectedAnnoteEl) {
+                selectCodeLines(selectedAnnoteEl);
+              }
+            }, 10)
+          );
+          function throttle(fn, ms) {
+          let throttle = false;
+          let timer;
+            return (...args) => {
+              if(!throttle) { // first call gets through
+                  fn.apply(this, args);
+                  throttle = true;
+              } else { // all the others get throttled
+                  if(timer) clearTimeout(timer); // cancel #2
+                  timer = setTimeout(() => {
+                    fn.apply(this, args);
+                    timer = throttle = false;
+                  }, ms);
+              }
+            };
+          }
+            const annoteTargets = window.document.querySelectorAll('.code-annotation-anchor');
+            for (let i=0; i<annoteTargets.length; i++) {
+              const annoteTarget = annoteTargets[i];
+              const targetCell = annoteTarget.getAttribute("data-target-cell");
+              const targetAnnotation = annoteTarget.getAttribute("data-target-annotation");
+              const contentFn = () => {
+                const content = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+                if (content) {
+                  const tipContent = content.cloneNode(true);
+                  tipContent.classList.add("code-annotation-tip-content");
+                  return tipContent.outerHTML;
+                }
+              }
+              const config = {
+                allowHTML: true,
+                content: contentFn,
+                onShow: (instance) => {
+                  selectCodeLines(instance.reference);
+                  instance.reference.classList.add('code-annotation-active');
+                  window.tippy.hideAll();
+                },
+                onHide: (instance) => {
+                  unselectCodeLines();
+                  instance.reference.classList.remove('code-annotation-active');
+                },
+                maxWidth: 300,
+                delay: [50, 0],
+                duration: [200, 0],
+                offset: [5, 10],
+                arrow: true,
+                trigger: 'click',
+                appendTo: function(el) {
+                  return el.parentElement.parentElement.parentElement;
+                },
+                interactive: true,
+                interactiveBorder: 10,
+                theme: 'light-border',
+                placement: 'right',
+                positionFixed: true,
+                popperOptions: {
+                  modifiers: [
+                  {
+                    name: 'flip',
+                    options: {
+                      flipVariations: false, // true by default
+                      allowedAutoPlacements: ['right'],
+                      fallbackPlacements: ['right', 'top', 'top-start', 'top-end', 'bottom', 'bottom-start', 'bottom-end', 'left'],
+                    },
+                  },
+                  {
+                    name: 'preventOverflow',
+                    options: {
+                      mainAxis: false,
+                      altAxis: false
+                    }
+                  }
+                  ]        
+                }      
+              };
+              window.tippy(annoteTarget, config); 
+            }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
