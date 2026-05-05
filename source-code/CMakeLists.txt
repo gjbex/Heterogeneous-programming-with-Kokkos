@@ -1,13 +1,18 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.22)
 
 project(kokkos LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-find_package(Kokkos REQUIRED)
-# include(common.cmake)
+include(FetchContent)
+FetchContent_Declare(
+  kokkos
+  GIT_REPOSITORY https://github.com/kokkos/kokkos.git
+  GIT_TAG        5.1.0
+)
+FetchContent_MakeAvailable(Kokkos)
 
 file(GLOB src_files  "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 foreach(src_file ${src_files})
