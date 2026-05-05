@@ -245,6 +245,6 @@ This uses CUDA streams under the hood.
 - `Kokkos::deep_copy(dest, src)` blcoks *all* execution spaces
 - `Kokkos::fence()` blocks *all* execution spaces
 - `Kokkos::parallel_reduce` with scalar blocks process
-- `Kokkos::View` that goes out of scopy may block
+- `Kokkos::View` that goes out of scope may block
 - Execution space `Kokkos::OpenMP` may block
 - Only one instance of `Kokkos::OpenMP` execution space
