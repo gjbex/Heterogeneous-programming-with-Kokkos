@@ -40,6 +40,7 @@ several backends such as OpenMP, CUDA, HIP, and SYCL.
 1. `random_walks`: simple application to illustrate the use of
   `Kokkos::Random_X` classes as well as memory traits.
 1. `cuda_required`: examples that won't compile without `Kokkos_ENABLE_CUDA`.
-1. `tasking`: simple example of using tasking.
+1. `tasking`: legacy Kokkos 4 example of using tasking. Kokkos tasking was
+   removed in Kokkos 5.0, so this target is skipped with Kokkos 5.1.x.
 1. `subviews.cpp`: illustration of using subviews.
 1. `CMakeLists.txt`: CMake file to build the applications.
