@@ -1,0 +1,377 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 25,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "displayName": "Base configuration",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_CXX_STANDARD": "20",
+        "CMAKE_CXX_STANDARD_REQUIRED": "ON",
+        "CMAKE_CXX_EXTENSIONS": "OFF",
+
+        "Kokkos_ENABLE_DEPRECATION_WARNINGS": "ON",
+        "Kokkos_ENABLE_DEPRECATED_CODE_4": "OFF",
+
+        "Kokkos_ENABLE_SERIAL": "ON",
+        "Kokkos_ENABLE_OPENMP": "OFF",
+        "Kokkos_ENABLE_THREADS": "OFF",
+        "Kokkos_ENABLE_CUDA": "OFF",
+        "Kokkos_ENABLE_HIP": "OFF",
+        "Kokkos_ENABLE_SYCL": "OFF"
+      }
+    },
+
+    {
+      "name": "debug-base",
+      "hidden": true,
+      "inherits": "base",
+      "displayName": "Base debug configuration",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "Kokkos_ENABLE_DEBUG": "ON",
+        "Kokkos_ENABLE_BOUNDS_CHECK": "ON"
+      }
+    },
+
+    {
+      "name": "serial",
+      "inherits": "base",
+      "displayName": "Serial backend",
+      "description": "Build Kokkos with the Serial backend only.",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "g++",
+
+        "Kokkos_ENABLE_SERIAL": "ON",
+        "Kokkos_ENABLE_OPENMP": "OFF",
+        "Kokkos_ENABLE_THREADS": "OFF",
+
+        "Kokkos_ARCH_NATIVE": "ON"
+      }
+    },
+
+    {
+      "name": "debug-serial",
+      "inherits": "debug-base",
+      "displayName": "Serial backend, debug",
+      "description": "Build Kokkos with the Serial backend and debug checks.",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "g++",
+
+        "Kokkos_ENABLE_SERIAL": "ON",
+        "Kokkos_ENABLE_OPENMP": "OFF",
+        "Kokkos_ENABLE_THREADS": "OFF",
+
+        "Kokkos_ARCH_NATIVE": "ON"
+      }
+    },
+
+    {
+      "name": "openmp",
+      "inherits": "base",
+      "displayName": "OpenMP backend",
+      "description": "Build Kokkos with the OpenMP host-parallel backend.",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "g++",
+
+        "Kokkos_ENABLE_SERIAL": "ON",
+        "Kokkos_ENABLE_OPENMP": "ON",
+        "Kokkos_ENABLE_THREADS": "OFF",
+
+        "Kokkos_ARCH_NATIVE": "ON"
+      },
+      "environment": {
+        "OMP_NUM_THREADS": "8"
+      }
+    },
+
+    {
+      "name": "debug-openmp",
+      "inherits": "debug-base",
+      "displayName": "OpenMP backend, debug",
+      "description": "Build Kokkos with the OpenMP backend and debug checks.",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "g++",
+
+        "Kokkos_ENABLE_SERIAL": "ON",
+        "Kokkos_ENABLE_OPENMP": "ON",
+        "Kokkos_ENABLE_THREADS": "OFF",
+
+        "Kokkos_ARCH_NATIVE": "ON"
+      },
+      "environment": {
+        "OMP_NUM_THREADS": "8"
+      }
+    },
+
+    {
+      "name": "threads",
+      "inherits": "base",
+      "displayName": "C++ Threads backend",
+      "description": "Build Kokkos with the Threads host-parallel backend.",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "g++",
+
+        "Kokkos_ENABLE_SERIAL": "ON",
+        "Kokkos_ENABLE_OPENMP": "OFF",
+        "Kokkos_ENABLE_THREADS": "ON",
+
+        "Kokkos_ARCH_NATIVE": "ON"
+      }
+    },
+
+    {
+      "name": "cuda-nvcxx",
+      "inherits": "base",
+      "displayName": "CUDA backend using nvc++",
+      "description": "Build Kokkos with CUDA using NVIDIA HPC SDK nvc++ as C++ compiler.",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "nvc++",
+
+        "Kokkos_ENABLE_SERIAL": "ON",
+        "Kokkos_ENABLE_OPENMP": "OFF",
+        "Kokkos_ENABLE_THREADS": "OFF",
+        "Kokkos_ENABLE_CUDA": "ON",
+
+        "Kokkos_ARCH_AMPERE80": "ON"
+      }
+    },
+
+    {
+      "name": "debug-cuda-nvcxx",
+      "inherits": "debug-base",
+      "displayName": "CUDA backend using nvc++, debug",
+      "description": "Build Kokkos with CUDA using nvc++ and debug checks.",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "nvc++",
+
+        "Kokkos_ENABLE_SERIAL": "ON",
+        "Kokkos_ENABLE_OPENMP": "OFF",
+        "Kokkos_ENABLE_THREADS": "OFF",
+        "Kokkos_ENABLE_CUDA": "ON",
+
+        "Kokkos_ARCH_AMPERE80": "ON"
+      }
+    },
+
+    {
+      "name": "cuda-nvcc-wrapper",
+      "inherits": "base",
+      "displayName": "CUDA backend using nvcc_wrapper",
+      "description": "Build Kokkos with CUDA using an externally available nvcc_wrapper. Set KOKKOS_SRC to the Kokkos source tree.",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "$env{KOKKOS_SRC}/bin/nvcc_wrapper",
+
+        "Kokkos_ENABLE_SERIAL": "ON",
+        "Kokkos_ENABLE_OPENMP": "OFF",
+        "Kokkos_ENABLE_THREADS": "OFF",
+        "Kokkos_ENABLE_CUDA": "ON",
+
+        "Kokkos_ARCH_AMPERE80": "ON"
+      }
+    },
+
+    {
+      "name": "cuda-cmake-language",
+      "inherits": "base",
+      "displayName": "CUDA backend using CMake CUDA language",
+      "description": "Build Kokkos with CUDA using CMake CUDA language support rather than nvcc_wrapper.",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "g++",
+        "CMAKE_CUDA_COMPILER": "nvcc",
+
+        "Kokkos_ENABLE_SERIAL": "ON",
+        "Kokkos_ENABLE_OPENMP": "OFF",
+        "Kokkos_ENABLE_THREADS": "OFF",
+        "Kokkos_ENABLE_CUDA": "ON",
+        "Kokkos_ENABLE_COMPILE_AS_CMAKE_LANGUAGE": "ON",
+
+        "Kokkos_ARCH_AMPERE80": "ON"
+      }
+    },
+
+    {
+      "name": "hip",
+      "inherits": "base",
+      "displayName": "HIP backend",
+      "description": "Build Kokkos with the HIP backend. Adjust the AMD architecture for the target GPU.",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "hipcc",
+
+        "Kokkos_ENABLE_SERIAL": "ON",
+        "Kokkos_ENABLE_OPENMP": "OFF",
+        "Kokkos_ENABLE_THREADS": "OFF",
+        "Kokkos_ENABLE_HIP": "ON",
+
+        "Kokkos_ARCH_AMD_GFX90A": "ON"
+      }
+    },
+
+    {
+      "name": "sycl",
+      "inherits": "base",
+      "displayName": "SYCL backend",
+      "description": "Build Kokkos with the SYCL backend using Intel oneAPI icpx.",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "icpx",
+
+        "Kokkos_ENABLE_SERIAL": "ON",
+        "Kokkos_ENABLE_OPENMP": "OFF",
+        "Kokkos_ENABLE_THREADS": "OFF",
+        "Kokkos_ENABLE_SYCL": "ON",
+
+        "Kokkos_ARCH_INTEL_PVC": "ON"
+      }
+    },
+
+    {
+      "name": "compat-openmp",
+      "inherits": "openmp",
+      "displayName": "OpenMP backend with Kokkos 4 compatibility",
+      "description": "OpenMP build with deprecated Kokkos 4 code enabled for migration.",
+      "cacheVariables": {
+        "Kokkos_ENABLE_DEPRECATED_CODE_4": "ON",
+        "Kokkos_ENABLE_DEPRECATION_WARNINGS": "ON"
+      }
+    },
+
+    {
+      "name": "compat-serial",
+      "inherits": "serial",
+      "displayName": "Serial backend with Kokkos 4 compatibility",
+      "description": "Serial build with deprecated Kokkos 4 code enabled for migration.",
+      "cacheVariables": {
+        "Kokkos_ENABLE_DEPRECATED_CODE_4": "ON",
+        "Kokkos_ENABLE_DEPRECATION_WARNINGS": "ON"
+      }
+    }
+  ],
+
+  "buildPresets": [
+    {
+      "name": "serial",
+      "configurePreset": "serial"
+    },
+    {
+      "name": "debug-serial",
+      "configurePreset": "debug-serial"
+    },
+    {
+      "name": "openmp",
+      "configurePreset": "openmp"
+    },
+    {
+      "name": "debug-openmp",
+      "configurePreset": "debug-openmp"
+    },
+    {
+      "name": "threads",
+      "configurePreset": "threads"
+    },
+    {
+      "name": "cuda-nvcxx",
+      "configurePreset": "cuda-nvcxx"
+    },
+    {
+      "name": "debug-cuda-nvcxx",
+      "configurePreset": "debug-cuda-nvcxx"
+    },
+    {
+      "name": "cuda-nvcc-wrapper",
+      "configurePreset": "cuda-nvcc-wrapper"
+    },
+    {
+      "name": "cuda-cmake-language",
+      "configurePreset": "cuda-cmake-language"
+    },
+    {
+      "name": "hip",
+      "configurePreset": "hip"
+    },
+    {
+      "name": "sycl",
+      "configurePreset": "sycl"
+    },
+    {
+      "name": "compat-openmp",
+      "configurePreset": "compat-openmp"
+    },
+    {
+      "name": "compat-serial",
+      "configurePreset": "compat-serial"
+    }
+  ],
+
+  "testPresets": [
+    {
+      "name": "serial",
+      "configurePreset": "serial",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "debug-serial",
+      "configurePreset": "debug-serial",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "openmp",
+      "configurePreset": "openmp",
+      "environment": {
+        "OMP_NUM_THREADS": "8"
+      },
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "debug-openmp",
+      "configurePreset": "debug-openmp",
+      "environment": {
+        "OMP_NUM_THREADS": "8"
+      },
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "threads",
+      "configurePreset": "threads",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "cuda-nvcxx",
+      "configurePreset": "cuda-nvcxx",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "cuda-nvcc-wrapper",
+      "configurePreset": "cuda-nvcc-wrapper",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "cuda-cmake-language",
+      "configurePreset": "cuda-cmake-language",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ]
+}
