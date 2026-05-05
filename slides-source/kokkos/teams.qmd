@@ -18,8 +18,8 @@ Challenge: how to divide the work?
 - Top-level: `TeamPolicy`
 - Next level
   - `TeamThreadRange`, `TeamThreadMDRange`
+    - `ThreadVectorRange`, `ThreadVectorMDRange`
   - `TeamVectorRange`, `TeamVectorMDRange`
-  - `ThreadVectorRange`, `ThreadVectorMDRange`
   
 
 ## Example 1: $\vec{y} = A \cdot \vec{x}$
