@@ -5,7 +5,7 @@
 
 const int nr_distr{5};
 using view_type = Kokkos::View<float* [nr_distr]>;
-using host_view_type = view_type::HostMirror;
+using host_view_type = view_type::host_mirror_type;
 
 struct MultiSum {
   using value_type = float[];
