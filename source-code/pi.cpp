@@ -10,7 +10,7 @@ struct ComputePi {
  public:
   ComputePi(int N, unsigned long seed) : N_{N}, rand_pool{seed} {}
   KOKKOS_INLINE_FUNCTION
-  void operator()(const int i, float& lsum) const {
+  void operator()(const int, float& lsum) const {
     auto rand_gen = rand_pool.get_state();
     for (int j = 0; j < N_; ++j) {
       float x{rand_gen.frand()};

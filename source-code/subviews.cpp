@@ -1,12 +1,15 @@
 #include <Kokkos_Core.hpp>
 #include <iostream>
 
+using matrix_view_type = Kokkos::View<int**>;
+using index_type = typename matrix_view_type::index_type;
+
 int main() {
   const int nr_rows{10};
   const int nr_cols{15};
   Kokkos::initialize();
   {
-    Kokkos::View<int**> a("A", nr_rows, nr_cols);
+    matrix_view_type a("A", nr_rows, nr_cols);
     Kokkos::parallel_for(
         "init_A",
         Kokkos::MDRangePolicy<Kokkos::Rank<2>>({0, 0}, {nr_rows, nr_cols}),
@@ -16,8 +19,8 @@ int main() {
     auto a_host = Kokkos::create_mirror_view(a);
     Kokkos::deep_copy(a_host, a);
     std::cout << "Original A:\n";
-    for (int i = 0; i < a_host.extent(0); i++) {
-      for (int j = 0; j < a_host.extent(1); j++) {
+    for (index_type i = 0; i < a_host.extent(0); i++) {
+      for (index_type j = 0; j < a_host.extent(1); j++) {
         std::cout.width(4);
         std::cout << a_host(i, j) << " ";
       }
@@ -28,8 +31,8 @@ int main() {
     auto a_subview_host = Kokkos::create_mirror_view(a_subview);
     Kokkos::deep_copy(a_subview_host, a_subview);
     std::cout << "\nSubview A(:, 2:5):\n";
-    for (int i = 0; i < a_subview_host.extent(0); i++) {
-      for (int j = 0; j < a_subview_host.extent(1); j++) {
+    for (index_type i = 0; i < a_subview_host.extent(0); i++) {
+      for (index_type j = 0; j < a_subview_host.extent(1); j++) {
         std::cout.width(4);
         std::cout << a_subview_host(i, j) << " ";
       }

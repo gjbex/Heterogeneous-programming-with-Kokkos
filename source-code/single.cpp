@@ -9,7 +9,6 @@ int main(int argc, char* argv[]) {
   {
     const int nr_of_teams{argc > 1 ? std::stoi(argv[1]) : 2};
     const int team_size{argc > 2 ? std::stoi(argv[2]) : 3};
-    const int loop_size{argc > 3 ? std::stoi(argv[3]) : 16};
     policy_t policy(nr_of_teams, team_size);
     std::cout << "Number of teams: " << policy.league_size() << std::endl;
 

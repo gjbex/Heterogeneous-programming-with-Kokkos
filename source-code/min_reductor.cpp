@@ -2,6 +2,9 @@
 #include <Kokkos_Random.hpp>
 #include <iostream>
 
+using view_type = Kokkos::View<double*>;
+using size_type = typename view_type::size_type;
+
 int main(int argc, char* argv[]) {
   Kokkos::initialize(argc, argv);
   {
@@ -11,13 +14,13 @@ int main(int argc, char* argv[]) {
     Random random(1234);
 
     // Create a view of random numbers
-    Kokkos::View<double*> data("data", 10);
+    view_type data("data", 10);
     Kokkos::fill_random(data, random, 0.0, 1.0);
 
     // Create a mirror view to print the data
     auto data_host = Kokkos::create_mirror_view(data);
     deep_copy(data_host, data);
-    for (int i = 0; i < data_host.size(); i++) {
+    for (size_type i = 0; i < data_host.size(); i++) {
       std::cout << data_host(i) << " ";
     }
     std::cout << std::endl;

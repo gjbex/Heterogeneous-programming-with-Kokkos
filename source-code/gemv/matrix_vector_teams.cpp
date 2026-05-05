@@ -4,6 +4,7 @@
 using matrix_view_t = Kokkos::View<float**>;
 using vector_view_t = Kokkos::View<float*>;
 using policy_t = Kokkos::TeamPolicy<Kokkos::DefaultExecutionSpace>;
+using index_t = typename matrix_view_t::index_type;
 
 int main(int argc, char* argv[]) {
   Kokkos::initialize(argc, argv);
@@ -15,7 +16,7 @@ int main(int argc, char* argv[]) {
     vector_view_t y("y", M);
     Kokkos::parallel_for(
         "init_A", M, KOKKOS_LAMBDA(const int i) {
-          for (int j = 0; j < A.extent(1); ++j) {
+          for (index_t j = 0; j < A.extent(1); ++j) {
             A(i, j) = 1.0f;
           }
         });

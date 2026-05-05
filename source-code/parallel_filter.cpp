@@ -2,28 +2,32 @@
 #include <iostream>
 #include <random>
 
+using data_view_type = Kokkos::View<double*>;
+using mask_view_type = Kokkos::View<int*>;
+using index_type = typename data_view_type::index_type;
+
 int main(int argc, char* argv[]) {
   const int seed{argc > 1 ? std::stoi(argv[1]) : 1234};
   Kokkos::initialize(argc, argv);
   {
     // Create a 1D view of 10 elements
-    Kokkos::View<double*> data_dev("data_dev", 10);
+    data_view_type data_dev("data_dev", 10);
     // Create a mirror view
     auto data_host = Kokkos::create_mirror_view(data_dev);
     // Initialize the data on the host using random numbers from mt19937
     std::mt19937 rng(seed);
     std::uniform_real_distribution<double> dist(0.0, 1.0);
-    for (int i = 0; i < data_host.extent(0); ++i) {
+    for (index_type i = 0; i < data_host.extent(0); ++i) {
       data_host(i) = dist(rng);
     }
     // Deep copy the data from the host to the device
     Kokkos::deep_copy(data_dev, data_host);
     // Print the data
-    for (int i = 0; i < data_host.extent(0); ++i) {
+    for (index_type i = 0; i < data_host.extent(0); ++i) {
       std::cout << data_host(i) << " ";
     }
     // Check which elements of the data are greater than 0.5
-    Kokkos::View<int*> mask("mask", data_dev.extent(0));
+    mask_view_type mask("mask", data_dev.extent(0));
     Kokkos::parallel_for(
         "filter", data_dev.extent(0),
         KOKKOS_LAMBDA(const int i) { mask(i) = data_dev(i) > 0.5; });
@@ -43,7 +47,7 @@ int main(int argc, char* argv[]) {
     std::cout << std::endl
               << "Number of elements greater than 0.5: " << count << std::endl;
     // Create a view to store the filtered data
-    Kokkos::View<double*> filtered_data("filtered_data", count);
+    data_view_type filtered_data("filtered_data", count);
     // Filter the data
     Kokkos::parallel_for(
         "filter_data", data_dev.extent(0), KOKKOS_LAMBDA(const int i) {
@@ -56,7 +60,7 @@ int main(int argc, char* argv[]) {
     auto filtered_data_host = Kokkos::create_mirror_view(filtered_data);
     Kokkos::deep_copy(filtered_data_host, filtered_data);
     // Print the filtered data
-    for (int i = 0; i < filtered_data_host.extent(0); ++i) {
+    for (index_type i = 0; i < filtered_data_host.extent(0); ++i) {
       std::cout << filtered_data_host(i) << " ";
     }
     std::cout << std::endl;

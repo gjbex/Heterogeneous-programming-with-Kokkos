@@ -9,14 +9,14 @@ int main() {
     auto host_view = Kokkos::create_mirror_view(view);
     Kokkos::deep_copy(view, 0);
     Kokkos::parallel_for(
-        N, KOKKOS_LAMBDA(const int i) { view(0)++; });
+        N, KOKKOS_LAMBDA(const int) { view(0)++; });
     Kokkos::fence();
     Kokkos::deep_copy(host_view, view);
     std::cout << "no atomics view(0) = " << host_view(0) << "/" << N
               << std::endl;
     Kokkos::deep_copy(view, 0);
     Kokkos::parallel_for(
-        N, KOKKOS_LAMBDA(const int i) { Kokkos::atomic_inc(&view(0)); });
+        N, KOKKOS_LAMBDA(const int) { Kokkos::atomic_inc(&view(0)); });
     Kokkos::fence();
     Kokkos::deep_copy(host_view, view);
     std::cout << "atomics view(0) = " << host_view(0) << "/" << N << std::endl;
