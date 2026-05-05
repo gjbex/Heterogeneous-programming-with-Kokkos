@@ -89,7 +89,7 @@ Default "best" for memory space, parallel access over leftmost index
 - Execution space can be specified
 
 ::: {.callout-warning .fragment}
-`Kokkos::deep_copy` between different memory spaces may not work
+`Kokkos::deep_copy` between different memory spaces may not work for non-contiguous data, e.g., subviews
 :::
 
 
@@ -97,7 +97,7 @@ Default "best" for memory space, parallel access over leftmost index
 
 Required for, e.g.,
 
-- initlizing views from file
+- initializing views from file
 - writing views to file
 - non-paralellizable operations
 

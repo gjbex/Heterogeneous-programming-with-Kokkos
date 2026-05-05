@@ -137,7 +137,7 @@
         "CMAKE_CXX_COMPILER": "nvc++",
 
         "Kokkos_ENABLE_SERIAL": "ON",
-        "Kokkos_ENABLE_OPENMP": "OFF",
+        "Kokkos_ENABLE_OPENMP": "ON",
         "Kokkos_ENABLE_THREADS": "OFF",
         "Kokkos_ENABLE_CUDA": "ON",
 
@@ -154,7 +154,7 @@
         "CMAKE_CXX_COMPILER": "nvc++",
 
         "Kokkos_ENABLE_SERIAL": "ON",
-        "Kokkos_ENABLE_OPENMP": "OFF",
+        "Kokkos_ENABLE_OPENMP": "ON",
         "Kokkos_ENABLE_THREADS": "OFF",
         "Kokkos_ENABLE_CUDA": "ON",
 
@@ -171,7 +171,7 @@
         "CMAKE_CXX_COMPILER": "$env{KOKKOS_SRC}/bin/nvcc_wrapper",
 
         "Kokkos_ENABLE_SERIAL": "ON",
-        "Kokkos_ENABLE_OPENMP": "OFF",
+        "Kokkos_ENABLE_OPENMP": "ON",
         "Kokkos_ENABLE_THREADS": "OFF",
         "Kokkos_ENABLE_CUDA": "ON",
 
@@ -189,7 +189,7 @@
         "CMAKE_CUDA_COMPILER": "nvcc",
 
         "Kokkos_ENABLE_SERIAL": "ON",
-        "Kokkos_ENABLE_OPENMP": "OFF",
+        "Kokkos_ENABLE_OPENMP": "ON",
         "Kokkos_ENABLE_THREADS": "OFF",
         "Kokkos_ENABLE_CUDA": "ON",
         "Kokkos_ENABLE_COMPILE_AS_CMAKE_LANGUAGE": "ON",
