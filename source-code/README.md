@@ -23,6 +23,7 @@ several backends such as OpenMP, CUDA, HIP, and SYCL.
 1. `host_to_host_deepcopy.cpp`: illustration that deep copy of a mirror
    view is a no-op when the source and target are both on the host.
 1. `parallel_scan.cpp`: illustration of parallel scan.
+1. `parallel_exscan.cpp`: illustration of parallel exscan.
 1. `parallel_filter.cpp`: illustration of how to combine `Kokkos::parallel_for`
    and `Kokkos::parallel_scan` to filter elements of a view.
 1. `min_reductor.cpp`: illustration of using a `Kokkos::Min` reductor.
