@@ -46,7 +46,7 @@ Motivation
 - Relatively widely used
 - Good/reasonable documentation
 - C++ based/Python bindings
-- Can target non-GPU accelerators (e.g. FPGAs)
+- Can target non-GPU accelerators (e.g., FPGAs)
 :::
 
 {{< include kokkos/kokkos.qmd >}}

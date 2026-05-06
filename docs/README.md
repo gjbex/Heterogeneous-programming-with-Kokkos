@@ -19,7 +19,110 @@ When you complete this training, you will
 
 ## Schedule
 
-TBD
+## Schedule
+
+Total duration: 6 hours, split over two sessions.
+
+
+### Session one
+
+Total duration: 3 hours
+
+  | Subject                                     | Duration |
+  |---------------------------------------------|----------|
+  | introduction and motivation                 |  5 min.  |
+  | GPU hardware and general programming model  | 85 min.  |
+  | coffee break                                | 10 min.  |
+  | installation and building                   | 20 min.  |
+  | Kokkos views                                | 60 min.  |
+
+
+### Session two
+
+4otal duration: 3 hours
+
+  | Subject                             | Duration |
+  |-------------------------------------|----------|
+  | Kokkos executtion patterns          | 30 min.  |
+  | Kokkos execution spaces             | 30 min.  |
+  | code examples                       | 30 min.  |
+  | coffee break                        | 10 min.  |
+  | Kokkos nested parallelism           | 30 min.  |
+  | Kokkos scratch pads                 | 20 min.  |
+  | Kokkos libraries and kernels        | 20 min.  |
+  | wrap-up & questions                 | 10 min.  |
+
+
+## Training materials
+
+Slides and source code are available in the
+ [GitHub repository](https://github.com/gjbex/Heterogeneous-programming-with-Kokkos),
+as well as example code and hands-on material.
+
+
+## Target audience
+
+This training is for you if you want to develop software that can run on CPUs,
+GPUs, and other accelerators.
+
+
+## Prerequisites
+
+You should be familiar with C++. Familiarity with a Linux environment is also
+required.
+
+More concretely, participants should already be comfortable with the following:
+
+* writing and reading small to medium C++ programs;
+* functions, classes or structs, references, and `const` correctness;
+* compiling and running C++ programs from the command line or with CMake at a
+  basic level;
+* standard-library containers and loops;
+* lambda expressions at a basic reading level;
+* working from the shell: navigating directories, editing files, and running
+  commands;
+* basic parallel-programming ideas such as loops over many elements,
+  reductions, and the fact that race conditions can occur when many threads
+  update shared data.
+
+You do not need prior experience with Kokkos itself, execution spaces, views,
+
+
+
+## Training materials
+
+Slides and source code are available in the
+ [GitHub repository](https://github.com/gjbex/Heterogeneous-programming-with-Kokkos),
+as well as example code and hands-on material.
+
+
+## Target audience
+
+This training is for you if you want to develop software that can run on CPUs,
+GPUs, and other accelerators.
+
+
+## Prerequisites
+
+You should be familiar with C++. Familiarity with a Linux environment is also
+required.
+
+More concretely, participants should already be comfortable with the following:
+
+* writing and reading small to medium C++ programs;
+* functions, classes or structs, references, and `const` correctness;
+* compiling and running C++ programs from the command line or with CMake at a
+  basic level;
+* standard-library containers and loops;
+* lambda expressions at a basic reading level;
+* working from the shell: navigating directories, editing files, and running
+  commands;
+* basic parallel-programming ideas such as loops over many elements,
+  reductions, and the fact that race conditions can occur when many threads
+  update shared data.
+
+You do not need prior experience with Kokkos itself, execution spaces, views,
+
 
 
 ## Training materials

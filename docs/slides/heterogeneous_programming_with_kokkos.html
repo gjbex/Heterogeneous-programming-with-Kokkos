@@ -246,7 +246,7 @@
 <li>Relatively widely used</li>
 <li>Good/reasonable documentation</li>
 <li>C++ based/Python bindings</li>
-<li>Can target non-GPU accelerators (e.g.&nbsp;FPGAs)</li>
+<li>Can target non-GPU accelerators (e.g., FPGAs)</li>
 </ul>
 </div>
 </section>
@@ -399,7 +399,7 @@
 </section>
 <section id="kokkos-views" class="slide level2">
 <h2>Kokkos views</h2>
-<p>View = <span class="math inline">\(N\)</span>-dimentional arrays</p>
+<p>View = <span class="math inline">\(N\)</span>-dimensional arrays</p>
 <ul>
 <li>contains
 <ul>
@@ -467,7 +467,7 @@
 <ul>
 <li><code>Kokkos::HostSpace</code> on host</li>
 <li><code>Kokkos::CudaSpace</code> on CUDA device</li>
-<li><code>Kokkos::CudaUVMSpace</code> in [CUDA UVM]^(Unified Virtual Memory)</li>
+<li><code>Kokkos::CudaUVMSpace</code> in CUDA UVM (Unified Virtual Memory)</li>
 <li><code>Kokkos::HipSpace</code> on HIP device</li>
 </ul></li>
 </ul>
@@ -527,7 +527,7 @@
 <p><strong>Warning</strong></p>
 </div>
 <div class="callout-content">
-<p><code>Kokkos::deep_copy</code> between different memory spaces may not work</p>
+<p><code>Kokkos::deep_copy</code> between different memory spaces may not work for non-contiguous data, e.g., subviews</p>
 </div>
 </div>
 </div>
@@ -537,7 +537,7 @@
 <h2>Mirror views</h2>
 <p>Required for, e.g.,</p>
 <ul>
-<li>initlizing views from file</li>
+<li>initializing views from file</li>
 <li>writing views to file</li>
 <li>non-paralellizable operations</li>
 </ul>
@@ -866,7 +866,7 @@
 <li><code>Kokkos::deep_copy(dest, src)</code> blcoks <em>all</em> execution spaces</li>
 <li><code>Kokkos::fence()</code> blocks <em>all</em> execution spaces</li>
 <li><code>Kokkos::parallel_reduce</code> with scalar blocks process</li>
-<li><code>Kokkos::View</code> that goes out of scopy may block</li>
+<li><code>Kokkos::View</code> that goes out of scope may block</li>
 <li>Execution space <code>Kokkos::OpenMP</code> may block</li>
 <li>Only one instance of <code>Kokkos::OpenMP</code> execution space</li>
 </ul>
@@ -894,9 +894,11 @@
 <li>Top-level: <code>TeamPolicy</code></li>
 <li>Next level
 <ul>
-<li><code>TeamThreadRange</code>, <code>TeamThreadMDRange</code></li>
-<li><code>TeamVectorRange</code>, <code>TeamVectorMDRange</code></li>
+<li><code>TeamThreadRange</code>, <code>TeamThreadMDRange</code>
+<ul>
 <li><code>ThreadVectorRange</code>, <code>ThreadVectorMDRange</code></li>
+</ul></li>
+<li><code>TeamVectorRange</code>, <code>TeamVectorMDRange</code></li>
 </ul></li>
 </ul>
 </section>

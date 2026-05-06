@@ -50,14 +50,17 @@ struct ReduceFunctor {
   explicit ReduceFunctor(view_type a) : a_{a} {}
 
   KOKKOS_INLINE_FUNCTION
-  void operator()(const int i, float &sum) const { sum += a_(i); }
+      void operator()(const int i, float &sum) const { sum += a_(i); }
+
+  KOKKOS_INLINE_FUNCTION
+      void join(float &dst, const float &src) const { dst += src; }
 };
 
 int main(int argc, char *argv[]) {
   Kokkos::initialize(argc, argv);
   {
     const int n{argc > 1 ? std::stoi(argv[1]) : 10'000};
-    const int N{argc > 2 ? std::stoi(argv[2]) : 20'480'00};
+    const int N{argc > 2 ? std::stoi(argv[2]) : 2'048'000};
 
     std::cout << "Kokkos execution space "
               << typeid(Kokkos::DefaultExecutionSpace).name() << std::endl;
