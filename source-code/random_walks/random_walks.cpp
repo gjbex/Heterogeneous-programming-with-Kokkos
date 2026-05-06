@@ -32,6 +32,7 @@ int main(int argc, char* argv[]) {
                ++step) {
             pos += generator.drand() < 0.5 ? -1 : 1;
           }
+          random_pool.free_state(generator);
           distance_atomic(pos)++;
         });
     Kokkos::fence();

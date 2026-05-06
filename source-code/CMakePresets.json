@@ -113,22 +113,6 @@
     },
 
     {
-      "name": "threads",
-      "inherits": "base",
-      "displayName": "C++ Threads backend",
-      "description": "Build Kokkos with the Threads host-parallel backend.",
-      "cacheVariables": {
-        "CMAKE_CXX_COMPILER": "g++",
-
-        "Kokkos_ENABLE_SERIAL": "ON",
-        "Kokkos_ENABLE_OPENMP": "OFF",
-        "Kokkos_ENABLE_THREADS": "ON",
-
-        "Kokkos_ARCH_NATIVE": "ON"
-      }
-    },
-
-    {
       "name": "cuda-nvcxx",
       "inherits": "base",
       "displayName": "CUDA backend using nvc++",
@@ -160,98 +144,6 @@
 
         "Kokkos_ARCH_AMPERE80": "ON"
       }
-    },
-
-    {
-      "name": "cuda-nvcc-wrapper",
-      "inherits": "base",
-      "displayName": "CUDA backend using nvcc_wrapper",
-      "description": "Build Kokkos with CUDA using an externally available nvcc_wrapper. Set KOKKOS_SRC to the Kokkos source tree.",
-      "cacheVariables": {
-        "CMAKE_CXX_COMPILER": "$env{KOKKOS_SRC}/bin/nvcc_wrapper",
-
-        "Kokkos_ENABLE_SERIAL": "ON",
-        "Kokkos_ENABLE_OPENMP": "ON",
-        "Kokkos_ENABLE_THREADS": "OFF",
-        "Kokkos_ENABLE_CUDA": "ON",
-
-        "Kokkos_ARCH_AMPERE80": "ON"
-      }
-    },
-
-    {
-      "name": "cuda-cmake-language",
-      "inherits": "base",
-      "displayName": "CUDA backend using CMake CUDA language",
-      "description": "Build Kokkos with CUDA using CMake CUDA language support rather than nvcc_wrapper.",
-      "cacheVariables": {
-        "CMAKE_CXX_COMPILER": "g++",
-        "CMAKE_CUDA_COMPILER": "nvcc",
-
-        "Kokkos_ENABLE_SERIAL": "ON",
-        "Kokkos_ENABLE_OPENMP": "ON",
-        "Kokkos_ENABLE_THREADS": "OFF",
-        "Kokkos_ENABLE_CUDA": "ON",
-        "Kokkos_ENABLE_COMPILE_AS_CMAKE_LANGUAGE": "ON",
-
-        "Kokkos_ARCH_AMPERE80": "ON"
-      }
-    },
-
-    {
-      "name": "hip",
-      "inherits": "base",
-      "displayName": "HIP backend",
-      "description": "Build Kokkos with the HIP backend. Adjust the AMD architecture for the target GPU.",
-      "cacheVariables": {
-        "CMAKE_CXX_COMPILER": "hipcc",
-
-        "Kokkos_ENABLE_SERIAL": "ON",
-        "Kokkos_ENABLE_OPENMP": "OFF",
-        "Kokkos_ENABLE_THREADS": "OFF",
-        "Kokkos_ENABLE_HIP": "ON",
-
-        "Kokkos_ARCH_AMD_GFX90A": "ON"
-      }
-    },
-
-    {
-      "name": "sycl",
-      "inherits": "base",
-      "displayName": "SYCL backend",
-      "description": "Build Kokkos with the SYCL backend using Intel oneAPI icpx.",
-      "cacheVariables": {
-        "CMAKE_CXX_COMPILER": "icpx",
-
-        "Kokkos_ENABLE_SERIAL": "ON",
-        "Kokkos_ENABLE_OPENMP": "OFF",
-        "Kokkos_ENABLE_THREADS": "OFF",
-        "Kokkos_ENABLE_SYCL": "ON",
-
-        "Kokkos_ARCH_INTEL_PVC": "ON"
-      }
-    },
-
-    {
-      "name": "compat-openmp",
-      "inherits": "openmp",
-      "displayName": "OpenMP backend with Kokkos 4 compatibility",
-      "description": "OpenMP build with deprecated Kokkos 4 code enabled for migration.",
-      "cacheVariables": {
-        "Kokkos_ENABLE_DEPRECATED_CODE_4": "ON",
-        "Kokkos_ENABLE_DEPRECATION_WARNINGS": "ON"
-      }
-    },
-
-    {
-      "name": "compat-serial",
-      "inherits": "serial",
-      "displayName": "Serial backend with Kokkos 4 compatibility",
-      "description": "Serial build with deprecated Kokkos 4 code enabled for migration.",
-      "cacheVariables": {
-        "Kokkos_ENABLE_DEPRECATED_CODE_4": "ON",
-        "Kokkos_ENABLE_DEPRECATION_WARNINGS": "ON"
-      }
     }
   ],
 
@@ -273,40 +165,12 @@
       "configurePreset": "debug-openmp"
     },
     {
-      "name": "threads",
-      "configurePreset": "threads"
-    },
-    {
       "name": "cuda-nvcxx",
       "configurePreset": "cuda-nvcxx"
     },
     {
       "name": "debug-cuda-nvcxx",
       "configurePreset": "debug-cuda-nvcxx"
-    },
-    {
-      "name": "cuda-nvcc-wrapper",
-      "configurePreset": "cuda-nvcc-wrapper"
-    },
-    {
-      "name": "cuda-cmake-language",
-      "configurePreset": "cuda-cmake-language"
-    },
-    {
-      "name": "hip",
-      "configurePreset": "hip"
-    },
-    {
-      "name": "sycl",
-      "configurePreset": "sycl"
-    },
-    {
-      "name": "compat-openmp",
-      "configurePreset": "compat-openmp"
-    },
-    {
-      "name": "compat-serial",
-      "configurePreset": "compat-serial"
     }
   ],
 
@@ -346,29 +210,8 @@
       }
     },
     {
-      "name": "threads",
-      "configurePreset": "threads",
-      "output": {
-        "outputOnFailure": true
-      }
-    },
-    {
       "name": "cuda-nvcxx",
       "configurePreset": "cuda-nvcxx",
-      "output": {
-        "outputOnFailure": true
-      }
-    },
-    {
-      "name": "cuda-nvcc-wrapper",
-      "configurePreset": "cuda-nvcc-wrapper",
-      "output": {
-        "outputOnFailure": true
-      }
-    },
-    {
-      "name": "cuda-cmake-language",
-      "configurePreset": "cuda-cmake-language",
       "output": {
         "outputOnFailure": true
       }
