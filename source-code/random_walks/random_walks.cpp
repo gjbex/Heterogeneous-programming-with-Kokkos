@@ -34,6 +34,7 @@ int main(int argc, char* argv[]) {
           }
           distance_atomic(pos)++;
         });
+    Kokkos::fence();
 
     // Check that distance contains the correct values
     int nr_walks_check{0};
