@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
     view_type b("B", N);
     view_type c("C", N);
 
-    float r{2.1f};
+    float r{0.2f};
     Kokkos::parallel_for(
         "init_vectors", N, KOKKOS_LAMBDA(const int i) {
           a(i) = r * i;
@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
     float sum{0.0f};
     Kokkos::parallel_reduce(
         "sum_components", N,
-        KOKKOS_LAMBDA(const int i, float& sum) { sum += a(i); }, sum);
+        KOKKOS_LAMBDA(const int i, float& sum) { sum += c(i); }, sum);
     std::cout << "Result: " << sum << std::endl;
   }
   Kokkos::finalize();
