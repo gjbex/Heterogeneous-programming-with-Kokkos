@@ -1,0 +1,159 @@
+schema_version = 2
+id = "heterogeneous-programming-with-kokkos"
+title = "Heterogeneous programming with Kokkos"
+content_language = "en"
+summary = """
+As the diversity of hardware accelerators increases, and CPUs keep adding more cores, it becomes increasingly important to write software that can run in a heterogeneous environment. This training introduces Kokkos, a C++ programming model that lets you write parallel code for CPUs, GPUs, and other accelerators. Kokkos provides abstractions for parallel execution and data management, and it can target different hardware platforms through backends such as Serial, OpenMP, CUDA, HIP, and SYCL.
+"""
+languages = ["C++"]
+
+[[learning_outcomes]]
+statement = "Explain the main ideas behind the Kokkos programming model."
+competencies = ["kokkos.explain-programming-model"]
+
+[[learning_outcomes]]
+statement = "Write basic Kokkos programs that can run on CPUs, GPUs, and other accelerators."
+competencies = ["kokkos.write-portable-programs"]
+
+[[learning_outcomes]]
+statement = "Use Kokkos execution patterns such as `parallel_for`, `parallel_reduce`, and `parallel_scan`."
+competencies = ["kokkos.execution-patterns"]
+
+[[learning_outcomes]]
+statement = "Use Kokkos views to manage data used by parallel kernels."
+competencies = ["kokkos.views-and-data-movement"]
+
+[[learning_outcomes]]
+statement = "Reason about host/device data movement and synchronization."
+competencies = ["kokkos.views-and-data-movement"]
+
+[[learning_outcomes]]
+statement = "Recognize when execution spaces, memory spaces, team policies, scratch memory, and Kokkos kernels become relevant."
+competencies = ["kokkos.execution-and-memory-spaces"]
+
+[source]
+metadata_document = "docs/README.md"
+repository_url = "https://github.com/gjbex/Heterogeneous-programming-with-Kokkos/"
+website_url = "https://gjbex.github.io/Heterogeneous-programming-with-Kokkos/"
+license = "CC-BY-4.0"
+
+[delivery]
+duration_minutes = 360
+duration_kind = "fixed"
+session_count = 2
+target_session_duration_minutes = 180
+schedule_complete = true
+description = """
+Total duration: 6 hours, split over two sessions. Total duration: 3 hours Total duration: 3 hours
+"""
+
+[audience]
+description = """
+This training is for you if you write C++ software and want to understand how Kokkos can help target CPUs, GPUs, and other accelerators without rewriting the core algorithm for each backend. It is especially relevant for scientific-computing, high-performance-computing, and technical-software developers who need portable performance across changing hardware platforms.
+"""
+
+[prerequisites]
+summary = """
+You should be familiar with C++. Familiarity with a Linux environment is also required. More concretely, participants should already be comfortable with the following: * writing and reading small to medium C++ programs; * functions, classes or structs, references, and `const` correctness; * compiling and running C++ programs from the command line or with CMake at a basic level; * standard-library containers and loops; * lambda expressions at a basic reading level; * working from the shell: navigating directories, editing files, and running commands; * basic parallel-programming ideas such as loops over many elements, reductions, and the fact that race conditions can occur when many threads update shared data. You do not need prior experience with Kokkos itself, execution spaces, views, team policies, device memory, or backend-specific GPU programming such as CUDA or HIP. Those are part of the training itself.
+"""
+competencies = ["cpp.basic-classes", "cpp.references-and-const", "cpp.standard-library-containers-and-algorithms", "cpp.read-lambda-expressions", "command-line.run-or-compile-programs", "parallel-programming.loops-and-reductions", "parallel-programming.race-conditions"]
+
+[self_assessment]
+introduction = """
+If you can do most of the tasks below without looking up basic C++ or shell syntax, you are likely ready for this training.
+"""
+tasks = [
+  "Read a short C++ program that uses a struct or class and explain what it does.",
+  "Compile and run a small C++ program from the command line.",
+  "Store values in a `std::vector`-like container and loop over them.",
+  "Read a lambda expression and understand what values it uses.",
+  "Understand at a high level what a reduction such as a sum over many elements does.",
+  "Understand at a high level why updating a shared variable from many threads can cause incorrect results.",
+  "Make a small change to an existing C++ source file and rebuild it."
+]
+
+[level]
+introductory_percent = 15
+intermediate_percent = 40
+advanced_percent = 45
+description = """
+For participants who already have basic to intermediate C++ programming experience, the material in this training is approximately These percentages describe the level of the heterogeneous-programming and Kokkos topics covered in the training, not the required entry level in C++ itself.
+"""
+
+[[materials]]
+kind = "slide-sources"
+path = "slides-source"
+
+[[materials]]
+kind = "source-code"
+path = "source-code"
+
+[[trainers]]
+name = "Geert Jan Bex"
+email = "geertjan.bex@uhasselt.be"
+
+[[maintainers]]
+name = "Geert Jan Bex"
+email = "geertjan.bex@uhasselt.be"
+
+[[sessions]]
+id = "session-1"
+title = "Session one"
+duration_minutes = 180
+
+[[sessions.items]]
+subject = "introduction and motivation"
+duration_minutes = 5
+
+[[sessions.items]]
+subject = "GPU hardware and general programming model"
+duration_minutes = 85
+
+[[sessions.items]]
+subject = "coffee break"
+duration_minutes = 10
+
+[[sessions.items]]
+subject = "installation and building"
+duration_minutes = 20
+
+[[sessions.items]]
+subject = "Kokkos views"
+duration_minutes = 60
+
+[[sessions]]
+id = "session-2"
+title = "Session two"
+duration_minutes = 180
+
+[[sessions.items]]
+subject = "Kokkos execution patterns"
+duration_minutes = 30
+
+[[sessions.items]]
+subject = "Kokkos execution spaces"
+duration_minutes = 30
+
+[[sessions.items]]
+subject = "code examples"
+duration_minutes = 30
+
+[[sessions.items]]
+subject = "coffee break"
+duration_minutes = 10
+
+[[sessions.items]]
+subject = "Kokkos nested parallelism"
+duration_minutes = 30
+
+[[sessions.items]]
+subject = "Kokkos scratch pads"
+duration_minutes = 20
+
+[[sessions.items]]
+subject = "Kokkos libraries and kernels"
+duration_minutes = 20
+
+[[sessions.items]]
+subject = "wrap-up and questions"
+duration_minutes = 10
